@@ -8,8 +8,4 @@ module ApplicationHelper
       page_name + " | " + base_title
     end
   end
-<<<<<<< HEAD
 end
-=======
-end
->>>>>>> top-page

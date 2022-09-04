@@ -1,19 +1,28 @@
 <!DOCTYPE html>
 <html>
   <head>
-<<<<<<< HEAD
     <title><%= full_title(yield(:title)) %></title>
-=======
     <title><%= yield(:title) %> | AttendanceApp</title>
->>>>>>> top-page
     <%= csrf_meta_tags %>
     <%= stylesheet_link_tag    'application', media: 'all',
                                'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application',
                                'data-turbolinks-track': 'reload' %>
   </head>
-
   <body>
-    <%= yield %>
+    <header class="navbar navbar-fixed-top navbar-inverse">
+      <div class="container">
+        <%= link_to "勤怠システム",'#',id: "logo" %>
+        <nav>
+          <ul class="nav navbar-nav navbar-right">
+              <%= link_to "トップへ", '#' %></li> 
+              <%= link_to "ログイン", '#' %></li> 
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <div class= "container">
+      <%= yield %>
+    </div>
   </body>
 </html>
