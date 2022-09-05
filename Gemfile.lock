@@ -39,8 +39,12 @@ GEM
       minitest (~> 5.1)
       tzinfo (~> 1.1)
     arel (8.0.0)
+<<<<<<< HEAD
     autoprefixer-rails (10.4.7.0)
       execjs (~> 2)
+=======
+    bcrypt (3.1.18)
+>>>>>>> modeling-user
     bindex (0.8.1)
     bootstrap-sass (3.4.1)
       autoprefixer-rails (>= 5.2.1)
