@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html>
   <head>
     <title><%= full_title(yield(:title)) %></title>
@@ -7,26 +7,13 @@
                                'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application',
                                'data-turbolinks-track': 'reload' %>
-
-    <!-- HTML shimがこの1行で収まる -->
-    <%= render 'layouts/shim' %>
-  </head>
-  <body>
-    <!-- headerの内容がこの1行で収まる -->
-    <%= render 'layouts/header' %>
-    <div class="container">
-    <!--[if lt IE 9]>
-      <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/r29/html5.min.js">
-      </script>
-    <![endif]-->
-
     <%= render 'layouts/shim' %>
   </head>
   <body>
     <%= render 'layouts/header' %>
     <div class="container">
       <% flash.each do |message_type, msg| %>
-        <div class="alert alert-<%= message_type %>"><%= msg %></div>
+        <div class="alert alert-<%= message_type %>"><%= msg.html_safe %></div>
       <% end %>
       <%= yield %>
       <%= debug(params) if Rails.env.development? %>
