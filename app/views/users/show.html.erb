@@ -32,7 +32,8 @@
         <th>備考</th>
       </tr>
     </thead>
-
+    
+  
     <tbody>
       <% @attendances.each do |day| %>
         <tr>
@@ -45,10 +46,27 @@
           </td>
           <td><%= l(day.started_at, format: :time) if day.started_at.present? %></td>
           <td><%= l(day.finished_at, format: :time) if day.finished_at.present? %></td>
-          <td></td>
+          <td><% if day.started_at.present? && day.finished_at.present? %>
+                <%= working_times(day.started_at, day.finished_at) %>
+              <% end %>
+          </td>
           <td></td>
         </tr>
       <% end %>
     </tbody>
+    
+    <tfoot>
+      <tr>
+        <td colspan="2">累計日数</td>
+        <td colspan="2">総合勤務時間</td>
+        <td colspan="2">累計在社時間</td>
+        <td colspan="2"></td>
+      </tr>
+      <tr>
+          <td colsapn="2"><%= @attendances.count %></td>
+          <td colspan="2"></td>
+          <td colspan="2"></td>
+      </tr>
+    </tfoot>
   </table>
 </div>
