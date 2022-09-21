@@ -47,6 +47,7 @@ class UsersController < ApplicationController
   end
 
   def edit_basic_info
+    @user = User.find(params[:id])
   end
 
   def update_basic_info
