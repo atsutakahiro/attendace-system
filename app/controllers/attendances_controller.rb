@@ -29,7 +29,7 @@ class AttendancesController < ApplicationController
   def edit_one_month
   end
   
-  def update_one_month
+  def update_one_month(context: :account_setup)
     ActiveRecord::Base.transaction do
       attendance_params.each do |id,item|
         attendance = Attendance.find(id)

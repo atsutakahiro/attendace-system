@@ -7,7 +7,7 @@
 
 <div class="row" id="search">
   <div class="col-lg-4">
-    <%= form_with(url: users_path, local: true) do |f| %>
+    <%= form_with(url: users_path,method: :get, local: true) do |f| %>
       <%= f.label :"ユーザー名検索" %>
       <div class="input-group"> 
         <%= f.text_field :search, value: params[:search], class: "form-control", placeholder: "キーワードを入力…" %>
@@ -30,8 +30,8 @@
 
     <% @users.each do |user| %>
       <tr>
-        <td><%= link_to user.name, user %></td>
         <td>
+          <%= link_to user.name, user %>
           <% if current_user.admin? && !current_user?(user) %>
           |<%= link_to "削除",user, method: :delete, data: { confirm: "削除してよろしいですか" } %>
           <% end %>
