@@ -24,10 +24,14 @@ class ApplicationController < ActionController::Base
   def correct_user
     redirect_to(root_url) unless current_user?(@user)
   end
-
+  
   # システム管理権限所有かどうか判定します。
   def admin_user
     redirect_to root_url unless current_user.admin?
+  end
+  
+  def autheniticate_user
+    redirect_to(root_url) unless current_user?(@user) or current_user.admin?
   end
 
   # ページ出力前に1ヶ月分のデータの存在を確認・セットします。
