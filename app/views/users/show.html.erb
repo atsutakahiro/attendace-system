@@ -2,21 +2,28 @@
 <div>
   <table class="table table-bordered table-condensed user-table">
     <tr>
-      <td>
-          <%= link_to "←", user_path(date: @first_day.prev_month), class: "btn btn-default" %> 
-          【<%= l(@first_day, format: :middle) %>】勤怠管理表
-          <%= link_to "→", user_path(dateL: @first_day.next_month), class: "btn btn-default" %>
+      <% if current_user?(@user) || current_user.admin? %>
+        <td>
+            <%= link_to "←", user_path(date: @first_day.prev_month), class: "btn btn-default" %> 
+            【<%= l(@first_day, format: :middle) %>】勤怠管理表
+            <%= link_to "→", user_path(dateL: @first_day.next_month), class: "btn btn-default" %>
+        </td>
+      <% else %>
+        <td><%= l(@first_day, format: :middle) %>時間管理表</td>
+      <% end %>
+      
+      <td>指定勤務開始時間:<%= format_basic_info(@user.designated_work_start_time) %>
+        <br>指定勤務終了時間:<%= format_basic_info(@user.designated_work_end_time) %>
       </td>
-
-          
-      <td>指定勤務時間：<%= format_basic_info(@user.work_time) %></td>
-      <td>基本時間：<%= format_basic_info(@user.basic_time) %></td>
+      
+      <td colspan="3">基本時間：<%= format_basic_info(@user.basic_time) %></td>
       <td>初日：<%= l(@first_day, format: :short) %></td>
     </tr>
-
     <tr>
       <td>所属：<%= @user.department.present? ? @user.department : "未所属" %></td>
       <td>名前：<%= @user.name %></td>
+      <td>コード：</td>
+      <td>0<%= @user.id %></td>
       <td>出勤日数：<%= @worked_sum %>日</td>
       <td>締め：<%= l(@last_day, format: :short) %></td>
     </tr>
