@@ -15,11 +15,11 @@ Rails.application.routes.draw do
       patch 'attendances/update_one_month'
     end
   resources :attendances, only: [:update] do
-    member do
-      # 残業申請モーダル
-      get 'edit_overtime_request'
-      patch 'update_overtime_request'
-    end
-    end
+      member do
+        # 残業申請モーダル
+        get 'edit_overtime_request'
+        patch 'update_overtime_request'  
+      end
+  end
   end
 end
