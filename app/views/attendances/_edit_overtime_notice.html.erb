@@ -1,3 +1,5 @@
+<% provide(:btn_text, '変更を返信する') %>
+
 <div class="modal-dialog modal-lg modal-dialog-center">
   <div class="modal-content">
     <div class="modal-header">
@@ -8,7 +10,6 @@
     <div class="modal-body">
       <div class="row">
         <div class="col-md-12">
-          <%= form_with(model: @user, url: update_overtime_notice_user_attendance_path(@user), local: true, method: :patch) do |f| %>
             <% @attendances.each do |id, attendances| %>
               <% user = User.find(id) %>
               <h1 class="modal-title"><%= "【#{user.name}からの残業申請】" %></h1>
@@ -56,8 +57,9 @@
                 <%= f.sumbit "変更を返信する", class: "btn btn-primary btn-block" %>
               </div>
             <% end %>
-          <% end %>
+          
         </div>
       </div>
     </div>
   </div>
+</div>

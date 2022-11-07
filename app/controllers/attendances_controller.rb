@@ -43,21 +43,49 @@ class AttendancesController < ApplicationController
   end
 
   def edit_one_month
+    @superiors = User.where(superior: true).where.not(id: @user.id)
   end
+  
+  
 
   def update_one_month
+    a_count = 0
     ActiveRecord::Base.transaction do # トランザクションを開始します。
       attendances_params.each do |id, item|
-        attendance = Attendance.find(id)
-        attendance.assign_attributes(item) #ここでオブジェクトのカラム全体を更新(この時点ではレコードに保存していない)
-        attendance.save!(context: :update_one_month)#ここで↑で更新した値をレコードに保存(同時にバリデーションを実行)
+        if item[:attendances_request_superior].present?
+          if item[:edit_started_at].blank? && item[:edit_finished_at].present?
+            flash[:danger] = "出勤時間が必要です。"
+            redirect_to attendances_edit_one_month_user_url(date: params[:date])
+            return
+          elsif item[:edit_started_at].present? && item[:edit_finished_at].blank?
+            flash[:danger] = "退勤時間が必要です。"
+            redirect_to attendances_edit_one_month_user_url(date: params[:date])
+            return
+          elsif item[:edit_started_at].present? && item[:edit_finished_at].present? && item[:edit_started_at].to_s > item[:edit_finished_at].to_s
+            flash[:danger] = "時刻に誤りがあります。"
+            redirect_to attendances_edit_one_month_user_url(date: params[:date])
+            return
+          end
+          attendance = Attendance.find(id)
+          attendance.indicater_reply_edit = "申請中"
+          a_count += 1
+          attendance.update!(item)
+        end
+      end
+      if a_count > 0
+        flash[:success] = "勤怠編集を#{a_count}件、申請しました。"
+        redirect_to user_url(date: params[:date])
+        return
+      else
+        flash[:danger] = "上長を選択してください。"
+        redirect_to attendances_edit_one_month_user_url(date: params[:date])
+        return
       end
     end
-    flash[:success] = "1ヶ月分の勤怠情報を更新しました。"# トランザクションが正常に稼働したら出る。
-    redirect_to user_url(date: params[:date])
   rescue ActiveRecord::RecordInvalid # トランザクションによるエラーの分岐です。
-    flash[:danger] = "無効な入力データがあった為、更新をキャンセルしました。"# トランザクションが失敗したら出る。
+    flash[:danger] = "無効な入力データがあった為、更新をキャンセルしました。"
     redirect_to attendances_edit_one_month_user_url(date: params[:date])
+    return
   end
 
   private
@@ -79,5 +107,10 @@ class AttendancesController < ApplicationController
     def overtime_params
       # attendanceテーブルの（残業終了予定時間,翌日、残業内容、指示者確認（どの上長か）、指示者確認（申請かどうか））
       params.require(:attendance).permit(:overtime_finished_at, :tomorrow, :overtime_work,:indicater_check,:indicater_reply)
+    end
+    
+     # 残業申請承認
+    def overtime_notice_params
+      params.require(:user).permit(attendances: [:indicater_reply, :tommorrow_edit])[:attendances]
     end
 end

@@ -44,7 +44,7 @@ class UsersController < ApplicationController
       
   def show
     @worked_sum = @attendances.where.not(started_at: nil).count
-    @overtime = Attendance.where(indicater_reply: "申請中", indicater_check: @user.name).count
+    @overtime_sum = @attendances.where(indicater_check: @user.name, indicater_reply: "申請中").count
     @change = Attendance.where(indicater_reply_edit: "申請中", indicater_check_edit: @user.name).count
     @month = Attendance.where(indicater_reply_month: "申請中", indicater_check_month: @user.name).count
     @superior = User.where(superior: true).where.not( id: current_user.id )

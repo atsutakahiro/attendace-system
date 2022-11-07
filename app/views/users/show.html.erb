@@ -27,37 +27,17 @@
       <td>出勤日数：<%= @worked_sum %>日</td>                 
       <td>締め：<%= l(@last_day, format: :short) %></td>
     </tr>                
-  </table>.              
+  </table>            
 </div>	             
 
-<div class="notice-group">
-  <% if current_user.superior? %>
-    <% if @month >= 1  %>
-      <div class="red-group">
-        <p><%= link_to  "【所属長承認申請のお知らせ】", edit_month_approval_notice_user_attendance_path(@user, @month), remote: true, class: "notice" %><span class="red_box"><%= "#{@month}件の通知があります"%></span></p>
-      </div>    
-      <% else %>
-      <p clas="notice">【所属長承認申請のお知らせ】</p>
-      <% end %> 
-<p></p>
-      <% if @change >= 1  %>
-        <div class="red-group">
-          <p><%= link_to  "【勤怠変更申請のお知らせ】", edit_one_month_notice_user_attendance_path(@user, @change), remote: true, class: "notice" %><span class="red_box"><%= "#{@change}件の通知があります"%></span></p>
-        </div>  
-      <% else %>
-        <p clas="notice">【勤怠変更申請のお知らせ】</p>
-      <% end %> 
-      <% if @overtime >= 1  %>
-        <!--<p><!%= link_to  "【残業申請のお知らせ】", edit_overtime_notice_user_attendance_path(@user, @overtime), remote: true, class: "notice" %><span class="red_box"><!%= "#{@overtime}件の通知があります"%></span></p>-->
-      <% else %>
-        <p clas="notice">【残業申請のお知らせ】</p>
-      <% end %> 
-  <% end %>
+<div class="notice">
+  
+      <%= link_to "【残業申請のお知らせ】", edit_overtime_notice_user_attendance_path(@user), remote: true, class: "notice-color" %>
+      <span>style="border: solid 3px red; color: red;><%= link_to "#{@overtime_sum}件の通知があります", edit_overtime_notice_user_attendance_path(@user), remote: true, class: "notice-color" %></span>
+   
 </div>
-
 <div class="btn-users-show">
   <%= link_to "1ヶ月の勤怠編集へ", attendances_edit_one_month_user_path(dateedit_user_path: @first_day), class: "btn btn-primary" %>
-  <! --<%= link_to "CSV出力", user_path(format: 'csv'), class: "btn btn-primary" %><br>-->
 </div>	
 <div>
  <table class="table table-bordered table-condensed table-hover" id="table-attendances">	
@@ -140,24 +120,16 @@
               <td></td>
             <% end %>
             <td>
-            <p>
-              <% if day.indicater_check.present? %>
-                <%= "#{day.indicater_check}に残業#{day.indicater_reply}" %>
-              <% elsif day.indicater_reply == "承認" %>
-                <%= "残業申請が#{day.indicater_reply}されました" %>
-              <% elsif day.indicater_reply == "否認" %>
-                <%= "残業申請が#{day.indicater_reply}されました" %>
+              <% if day.indicater_reply == "申請中" %>
+                <%= "#{day.indicater_check}へ残業#{day.indicater_reply}" %><br>
+              <% elsif (day.indicater_reply == "承認") || (day.indicater_reply == "否認") %>
+                <%= "#{day.indicater_check}より残業#{day.indicater_reply}" %><br>
               <% end %>
-            </p>
-            <p>
-              <% if day.indicater_check_edit.present? %>
-                <%= "#{day.indicater_check_edit}に勤怠変更#{day.indicater_reply_edit}" %>
-                <% elsif day.indicater_reply_edit == "承認" %>
-                <%= "勤怠変更申請が#{day.indicater_reply_edit}されました" %>
-              <% elsif day.indicater_reply_edit == "否認" %>
-                <%= "勤怠変更申請が#{day.indicater_reply_edit}されました" %>
-              <% end %>
-            </td>
+              <% if day.indicater_reply_edit == "申請中" %>
+                <%= "#{day.indicater_check}へ勤怠変更#{day.indicater_reply_edit}" %><br>
+              <% elsif (day.indicater_reply_edit == "承認") || (day.indicater_reply_edit == "否認") %>
+              <%= "#{day.indicater_check_edit}より勤怠#{day.indicater_reply_edit}" %><br>
+            <% end %>
         </tr>
       <% end %>
     </tbody>
@@ -165,23 +137,31 @@
     <tfoot>
       <!--rowspan:縦結合、colspan：横結合-->
       <tr>
-        <td rowspan="2"></td>
         <td colspan="2">累計日数</td>
-        <td colspan="6"></td>
+        <td colspan="7">総合勤務時間</td>
         <td colspan="1">累計在社時間</td>
-        <td colspan="5"></td>
         <td rowspan="2"></td>
+        <td rowspan="2"></td>
+        <td rowspan="2"></td>
+        <td rowspan="2"></td>
+        <td rowspan="2"></td>
+        <td rowspan="2">
+          <div class="application-form">
+            <%= render 'one_month_request_form' %>　<!--１ヶ月勤怠申請フォーム-->
+          </div>
+        </td>
       </tr>
       <tr>
-        <td colspan="2"><%= @attendance.count %></td>
-        <td colspan="6"></td>
-        <td colspan="1"></td>
-        <td colspan="5"></td>
+        <td colspan="2"><%= @attendances.count %></td>
+        <td colspan="7"><%= format_basic_info(@user.work_time).to_f * @worked_sum %></td>
+        <td><%= format("%.2f", @total_working_times.to_f) %></td>
       </tr>
     </tfoot> 
   </table>	
 </div>   
 
 <div id= "edit-overtime-request" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<div id= "edit-overtime-notice" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+
 
 
