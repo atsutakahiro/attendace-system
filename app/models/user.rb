@@ -51,8 +51,5 @@ class User < ApplicationRecord
   end
 
   #ユーザー検索
-  def self.search(search)
-    return User.all unless search
-    User.where(['name LIKE ?', "%#{search}%"])
-  end
+  
 end

@@ -4,7 +4,7 @@ class AttendancesController < ApplicationController
   before_action :logged_in_user, only: [:update, :edit_one_month, :update_one_month]
   before_action :admin_or_correct_user, only: [:update, :edit_one_month, :update_one_month]
   before_action :set_one_month, only: [:edit_one_month]
-  before_action :set_attendance, only: [:update, :edit_overtime_request, :update_overtime_request]
+  
 
   UPDATE_ERROR_MSG = "勤怠登録に失敗しました。やり直してください。"
 
@@ -108,7 +108,7 @@ class AttendancesController < ApplicationController
      # 残業申請モーダルの情報
     def overtime_params
       # attendanceテーブルの（残業終了予定時間,翌日、残業内容、指示者確認（どの上長か）、指示者確認（申請かどうか））
-      params.require(:attendance).permit(:overtime_finished_at, :tomorrow, :overtime_work,:indicater_check,:indicater_reply)
+      params.require(:attendance).permit(:overtime_finished_at, :tomorrow, :business_process_content,:indicater_check,:indicater_reply)
     end
     
      # 残業申請承認

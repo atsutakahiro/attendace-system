@@ -22,7 +22,7 @@ ActiveRecord::Schema.define(version: 20221105195957) do
     t.datetime "updated_at", null: false
     t.datetime "overtime_finished_at"
     t.boolean "tomorrow", default: false
-    t.string "overtime_work"
+    t.string "business_process_content"
     t.string "indicater_check"
     t.string "indicater_check_anser"
     t.integer "indicater_reply"
