@@ -10,18 +10,24 @@ class AttendancesController < ApplicationController
 
   # 残業申請モーダル
   def edit_overtime_request
-    @user = User.find(params[:user_id])
     @attendance = Attendance.find(params[:id])
     @superior = User.where(superior: true).where.not( id: current_user.id )
   end
   
+  # 残業申請のモーダルウィンドウ更新
   def update_overtime_request
-    @user = User.find(params[:user_id])
-    @attendance = Attendance.find(params[:id])
-    if @attendance.update_attributes(overtime_params)
-      flash[:success] = "残業申請を受け付けました"
-      redirect_to user_url(@user)
-    end  
+    if overtime_request_params[:overtime_finished_at].blank? || overtime_request_params[:business_process_content].blank? || overtime_request_params[:indicater_check].blank?
+      flash[:success] = "終了予定時間、業務処理内容、または、指示者確認㊞がありません"
+    else
+      if overtime_request_params[:overtime_finished_at].present? && overtime_request_params[:business_process_content].present? && overtime_request_params[:indicater_check].present?
+        params[:attendance][:overtime_request_status] = "申請中"
+        @attendance.update(overtime_request_params)
+        flash[:success] = "残業申請をしました"
+      else
+        flash[:danger] = "残業申請が正しくありません"
+      end
+    end
+    redirect_to user_path
   end
   
   def update
@@ -34,6 +40,7 @@ class AttendancesController < ApplicationController
       else
         flash[:danger] = UPDATE_ERROR_MSG
       end
+      
     elsif @attendance.finished_at.nil?
       if @attendance.update_attributes(finished_at: Time.current.change(sec: 0))
         flash[:info] = "お疲れ様でした。"
@@ -106,11 +113,10 @@ class AttendancesController < ApplicationController
     end
     
      # 残業申請モーダルの情報
-    def overtime_params
-      # attendanceテーブルの（残業終了予定時間,翌日、残業内容、指示者確認（どの上長か）、指示者確認（申請かどうか））
-      params.require(:attendance).permit(:overtime_finished_at, :tomorrow, :business_process_content,:indicater_check,:indicater_reply)
+    def overtime_request_params
+      params.require(:attendance).permit([:overtime_finished_at, :tommorow, :business_process_content, :indicater_check, :indicater_reply])
     end
-    
+      
      # 残業申請承認
     def overtime_notice_params
       params.require(:user).permit(attendances: [:indicater_reply, :tommorrow_edit])[:attendances]
@@ -120,3 +126,4 @@ class AttendancesController < ApplicationController
       @attendance = Attendance.find(params[:id])
     end
 end
+
