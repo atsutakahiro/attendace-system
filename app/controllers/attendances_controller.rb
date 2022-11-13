@@ -4,7 +4,7 @@ class AttendancesController < ApplicationController
   before_action :logged_in_user, only: [:update, :edit_one_month, :update_one_month]
   before_action :admin_or_correct_user, only: [:update, :edit_one_month, :update_one_month]
   before_action :set_one_month, only: [:edit_one_month]
-
+  before_action :set_attendance, only: [:update, :edit_overtime_request, :update_overtime_request]
   UPDATE_ERROR_MSG = "勤怠登録に失敗しました。やり直してください。"
 
   # 残業申請モーダル
@@ -20,7 +20,7 @@ class AttendancesController < ApplicationController
       if overtime_request_params[:overtime_finished_at].present? && overtime_request_params[:business_process_content].present? && overtime_request_params[:indicater_check].present?
         params[:attendance][:indicater_reply] = "申請中"
         @attendance.update(overtime_request_params)
-        falsh[:success] = "残業申請をしました"
+        flash[:success] = "残業申請をしました"
       else
         flash[:danger] = "残業申請が正しくありません"
       end
@@ -129,7 +129,7 @@ class AttendancesController < ApplicationController
     
      # 残業申請モーダルの情報
     def overtime_request_params
-      params.require(:attendance).permit([:overtime_finished_at, :tommorow, :business_process_content, :indicater_check, :indicater_reply])
+      params.require(:attendance).permit([:overtime_finished_at, :tomorrow, :business_process_content, :indicater_check, :indicater_reply])
     end
       
      # 残業申請承認
@@ -137,7 +137,7 @@ class AttendancesController < ApplicationController
       params.require(:user).permit(attendances: [:indicater_reply, :tommorrow_edit])[:attendances]
     end
     
-    def set_attendace
+    def set_attendance
       @attendance = Attendance.find(params[:id])
     end
 
@@ -148,8 +148,4 @@ class AttendancesController < ApplicationController
       params.require(:user).permit(attendances: [:indicater_reply, :tommorrow_edit])[:attendances]
     end
     
-    # 残業申請承認
-    def overtime_notice_params
-      params.require(:user).permit(attendances: [:indicater_reply, :tommorrow_edit])[:attendances]
-    end
 end

@@ -30,7 +30,7 @@
               %>
             <td><%= l(@attendance.worked_on, format: :short) %></td>
             <td class="<%= css_class %>"><%= $days_of_the_week[@attendance.worked_on.wday] %></td>
-            <td><%= f.time_select :overtime_finished_at, {include_blank: true}, {class: "form-control bootstrap-date-only-width",required: true } %></td>
+            <td><%= f.time_field :overtime_finished_at, class: 'form-control' %></td>
             <td><%= f.check_box :tomorrow,id: "tomorrow" %></td>
             <td><%= f.text_field :business_process_content, {class: "form-control", required: true } %></td>
             <td>
