@@ -10,6 +10,7 @@
     <div class="modal-body">
       <div class="row">
         <div class="col-md-12">
+          <%= form_with(model: @user, url: update_overtime_notice_user_attendance_path(@user), local: true, method: :patch) do |f| %>
             <% @attendances.each do |id, attendances| %>
               <% user = User.find(id) %>
               <h1 class="modal-title"><%= "【#{user.name}からの残業申請】" %></h1>
@@ -42,22 +43,22 @@
                         <td><%= day.overtime_finished_at.try(:strftime,"%H") %></td>
                         <td><%= day.overtime_finished_at.try(:strftime,"%M") %></td>
                         <td><%= l(user.designated_work_end_time, format: :hour) %></td>
-                        <td><%= l(user.designated_work_end_time, format: :minute) %></td>
-                        <td><%= overtime_calculation(day.overtime_finished_at, user.designated_work_end_time, day.tomorrow) if day.overtime_finished_at.present? %></td>
-                        <td><%= day.business_process_content %></td>
-                        <td><%= attenadnce.select :indicater_reply['なし', '申請中', '承認','否認'] %></td>
-                        <td><%= attendance.check_box :tomorrow_edit %></td>
+                        <td><%= l(user.designated_work_end_time, format: :minutes) %></td>
                         <td></td>
+                        <td><%= day.business_process_content %></td>
+                        <td><%= attendance.select :indicater_reply, ['なし','申請中'] %></td>
+                        <td><%= attendance.check_box :tomorrow_edit %></td>
+                        <td><%= link_to "確認", "#" %></td>
                       </tr>
                     <% end %>
                   <% end %>
                 </tbody>
               </table>
               <div class="center">
-                <%= f.sumbit "変更を返信する", class: "btn btn-primary btn-block" %>
+                <%= f.submit "変更を返信する", class: "btn btn-primary btn-block" %>
               </div>
             <% end %>
-          
+          <% end %>
         </div>
       </div>
     </div>

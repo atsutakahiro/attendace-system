@@ -3,6 +3,7 @@ class UsersController < ApplicationController
   before_action :logged_in_user, only: [:edit, :update, :update_index, :destroy, :edit_basic_info, :update_basic_info]
   before_action :correct_user, only: [:show, :edit, :update,]
   before_action :admin_user, only: [:index, :destroy, :edit_basic_info, :update_basic_info, :all_user_edit]
+  before_action :admin_impossible, only: :show
   before_action :set_one_month, only: :show
 
   def index
@@ -25,10 +26,10 @@ class UsersController < ApplicationController
    
   def show
     @worked_sum = @attendances.where.not(started_at: nil).count
-    @overtime_sum = @attendances.where(indicater_check: @user.name, indicater_reply: "申請中").count
+    @overtime_count = Attendance.where(indicater_check: @user.name, indicater_reply: "申請中").count
     @change = Attendance.where(indicater_reply_edit: "申請中", indicater_check_edit: @user.name).count
     @month = Attendance.where(indicater_reply_month: "申請中", indicater_check_month: @user.name).count
-    @superior = User.where(superior: true).where.not( id: current_user.id )
+    @superiors = User.where(superior: true).where.not(id: @user.id )
     
     # csv出力
     respond_to do |format|

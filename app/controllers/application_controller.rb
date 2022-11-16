@@ -37,6 +37,13 @@ class ApplicationController < ActionController::Base
   def autheniticate_user
     redirect_to(root_url) unless current_user?(@user) or current_user.admin?
   end
+  
+  def admin_impossible
+    if current_user.admin?
+      flash[:danger] = "権限がありません。"
+      redirect_to root_url
+    end
+  end
 
   # ページ出力前に1ヶ月分のデータの存在を確認・セットします。
   def set_one_month 

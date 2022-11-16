@@ -5,6 +5,10 @@
   text-align: center;
 }
 
+.upp {
+    padding-bottom: 20px;
+}
+
 /* ユーザー情報下ボタン */
 
 .btn-users-show {
@@ -23,6 +27,12 @@
     vertical-align: middle;
     text-align: center;
   }
+}
+
+.notice-color {
+  text-decoration: none;
+  color: red;
+  padding-bottom: 20px;
 }
 
 /* 入力フォーム */
@@ -60,4 +70,12 @@
 .btn-basic-info {
   margin: 15px 0;
   width: 100%;
+}
+
+.wday0 {
+  color: red;
+}
+
+.wday6 {
+  color: blue;
 }

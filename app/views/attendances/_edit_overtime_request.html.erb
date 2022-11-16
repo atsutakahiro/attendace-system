@@ -20,21 +20,12 @@
             </tr>
           </thead>
           <tbody class="line">
-            <% css_class = 
-            case $days_of_the_week[@attendance.worked_on.wday]
-              when '土'
-                'text-primary'
-              when '日'                                        
-                'text-danger'
-              end
-              %>
             <td><%= l(@attendance.worked_on, format: :short) %></td>
-            <td class="<%= css_class %>"><%= $days_of_the_week[@attendance.worked_on.wday] %></td>
+            <td><%= $days_of_the_week[@attendance.worked_on.wday] %></td>
             <td><%= f.time_field :overtime_finished_at, class: 'form-control' %></td>
             <td><%= f.check_box :tomorrow,id: "tomorrow" %></td>
             <td><%= f.text_field :business_process_content, {class: "form-control", required: true } %></td>
-            <td>
-              <%= f.select :indicater_check, [["上長A", "上長A"], ["上長B", "上長B"]], include_blank: "選択して下さい" %>
+            <td><%= f.collection_select :indicater_check, @superiors, :name, :name, {prompt: ""}, required: true %></td> 
           </tbody>
         </table>
         <%= f.submit "変更を送信する", class: "btn btn-primary btn-block" %>
