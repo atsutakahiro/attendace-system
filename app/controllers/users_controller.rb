@@ -1,10 +1,10 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :edit, :update, :update_index, :destroy, :edit_basic_info, :update_basic_info]
+  before_action :set_user, only: [:show, :edit, :update, :update_index, :destroy, :edit_basic_info, :update_basic_info, :show_check]
   before_action :logged_in_user, only: [:edit, :update, :update_index, :destroy, :edit_basic_info, :update_basic_info]
   before_action :correct_user, only: [:show, :edit, :update,]
   before_action :admin_user, only: [:index, :destroy, :edit_basic_info, :update_basic_info, :all_user_edit]
   before_action :admin_impossible, only: :show
-  before_action :set_one_month, only: :show
+  before_action :set_one_month, only: [:show, :show_check]
 
   def index
     @users = User.paginate(page: params[:page])
@@ -100,6 +100,14 @@ class UsersController < ApplicationController
       flash[:danger] = "#{@user.name}の更新は失敗しました。<br>" + @user.errors.full_messages.join("<br>")
     end
     redirect_to users_url
+  end
+  
+  def show_check
+    @worked_sum = @attendances.where.not(started_at: nil).count
+    @overtime_count = Attendance.where(indicater_check: @user.name, indicater_reply: "申請中").count
+    @change = Attendance.where(indicater_reply_edit: "申請中", indicater_check_edit: @user.name).count
+    @month = Attendance.where(indicater_reply_month: "申請中", indicater_check_month: @user.name).count
+    @superiors = User.where(superior: true).where.not(id: @user.id )
   end
 
   private

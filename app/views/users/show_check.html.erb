@@ -1,0 +1,122 @@
+<% provide(:title, @user.name) %>
+<div>
+  <table class="table table-bordered table-condensed user-table">
+    <tr>　
+      <td><%= l(@first_day, format: :middle) %>時間管理表</td>
+      <td>指定勤務開始時間:<%= format_basic_info(@user.designated_work_start_time) %>
+        <br>指定勤務終了時間:<%= format_basic_info(@user.designated_work_end_time) %>
+      </td>
+      <td colspan="3">基本時間：<%= format_basic_info(@user.basic_time) %></td>
+      <td>初日：<%= l(@first_day, format: :short) %></td>
+    </tr>
+    <tr>
+      <td>所属：<%= @user.department.present? ? @user.department : "未所属" %></td>
+      <td>名前：<%= @user.name %></td>
+      <td>コード：</td>                     
+      <td>0<%= @user.id %></td>
+      <td>出勤日数：<%= @worked_sum %>日</td>                 
+      <td>締め：<%= l(@last_day, format: :short) %></td>
+    </tr>                
+  </table>            
+</div>	             
+
+<div>
+ <table class="table table-bordered table-condensed table-hover" id="table-attendances">	
+    <thead>
+     <tr>	
+       <th colspan="3"></th>
+       <th colspan="8">【実績】</th>
+       <th colspan="5">所定外勤務</th>
+     </tr>　　　　
+  
+     <tr>
+       <th rowspan="2">残業申請</th>
+       <th rowspan="2">日付</th>
+       <th rowspan="2">曜日</th>	
+       <th colspan="3">出社</th>	
+       <th colspan="3">退社</th>	
+       <th rowspan="2">在社時間</th>	
+       <th rowspan="2">備考</th>	
+       <th colspan="2">終了予定時間</th>	
+       <th rowspan="2">時間外時間</th>
+       <th rowspan="2">業務処理内容</th>
+       <th rowspan="2">指示書確認㊞</th>
+     </tr>	
+     <tr>
+       <th>時</th>
+       <th>分</th>
+       <th></th>
+       <th>時</th>
+       <th>分</th>　　
+       <th></th>
+       <th>時</th>
+       <th>分</th>
+      </tr>　　　
+    </thead>
+    <tbody>
+      <% @attendances.each do |day| %>
+        
+        <tr>
+          <td></td>
+          <td><%= l(day.worked_on, format: :short) %></td>
+          <td class="<%= "wday#{day.worked_on.wday}" %>"><%= $days_of_the_week[day.worked_on.wday] %></td>
+          <td><%= l(day.started_at.floor_to(15.minutes), format: :hour) if day.started_at.present? %></td>
+          <td><%= l(day.started_at.floor_to(15.minutes), format: :minutes) if day.started_at.present? %></td>
+          <td></td>
+          <td class="col-sm-2"><%= l(day.finished_at.floor_to(15.minutes), format: :hour) if day.finished_at.present? %></td>
+          <td class="col-sm-2"><%= l(day.finished_at.floor_to(15.minutes), format: :minutes) if day.finished_at.present? %></td>
+          <td></td>
+          <td>
+            <% if day.started_at.present? && day.finished_at.present? %>
+              <%= str_times = working_times(day.started_at, day.finished_at) %>
+              <% @total_working_times = @total_working_times.to_f + str_times.to_f %>
+            <% end %>
+          </td>
+          <td><%= day.note %></td>
+          <td><%= day.overtime_finished_at.try(:strftime, "%H" ) %></td>
+          <td><%= day.overtime_finished_at.try(:strftime, "%M" ) %></td>
+          <td></td>
+          <td><%= day.business_process_content if day.business_process_content.present? %></td>
+          <td>
+            <% if day.indicater_reply == "申請中" %>
+              <%= "#{day.indicater_check}へ残業#{day.indicater_reply}" %><br>
+            <% elsif (day.indicater_reply == "承認") || (day.indicater_reply == "否認") %>
+              <%= "#{day.indicater_check}より残業#{day.indicater_reply}" %><br>
+            <% end %>
+            <% if day.indicater_reply_edit == "申請中" %>
+              <%= "#{day.indicater_check}へ勤怠変更#{day.indicater_reply_edit}" %><br>
+            <% elsif (day.indicater_reply_edit == "承認") || (day.indicater_reply_edit == "否認") %>
+            <%= "#{day.indicater_check_edit}より勤怠#{day.indicater_reply_edit}" %><br>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+    
+    <tfoot>
+      <!--rowspan:縦結合、colspan：横結合-->
+      <tr>
+        <td colspan="2">累計日数</td>
+        <td colspan="7">総合勤務時間</td>
+        <td colspan="1">累計在社時間</td>
+        <td rowspan="2"></td>
+        <td rowspan="2"></td>
+        <td rowspan="2"></td>
+        <td rowspan="2"></td>
+        <td rowspan="2"></td>
+        <td rowspan="2"></td>
+      </tr>
+      <tr>
+        <td colspan="2"><%= @attendances.count %></td>
+        <td colspan="7"><%= format_basic_info(@user.work_time).to_f * @worked_sum %></td>
+        <td><%= format("%.2f", @total_working_times.to_f) %></td>
+      </tr>
+    </tfoot> 
+  </table>	
+</div>   
+
+<div id= "edit-overtime-request" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<div id= "edit-overtime-notice" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+
+
+

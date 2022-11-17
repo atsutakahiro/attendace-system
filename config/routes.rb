@@ -17,6 +17,8 @@ Rails.application.routes.draw do
       patch 'attendances/update_one_month'
       # １ヶ月の勤怠申請
       patch 'attendances/update_one_month_request'
+      get 'show_check'
+      
     end
   resources :attendances, only: [:update] do
       member do

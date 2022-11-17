@@ -14,4 +14,12 @@ module AttendancesHelper
   def working_times(start, finish)
     format("%.2f", (((finish.floor_to(15.minutes) - start.floor_to(15.minutes)) / 60) / 60.0))
   end
+  
+  def overtime_calculation(finish, start, add)
+    if add.present?
+      format("%.2f", ((finish.hour - start.hour) + (finish.min - start.min) / 60.0) +24)
+    else     
+      format("%.2f", (finish.hour - start.hour) + (finish.min - start.min) / 60.0)
+    end
+  end
 end

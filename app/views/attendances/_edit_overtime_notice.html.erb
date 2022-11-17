@@ -44,11 +44,11 @@
                         <td><%= day.overtime_finished_at.try(:strftime,"%M") %></td>
                         <td><%= l(user.designated_work_end_time, format: :hour) %></td>
                         <td><%= l(user.designated_work_end_time, format: :minutes) %></td>
-                        <td></td>
+                        <td><%= overtime_calculation(day.overtime_finished_at, user.designated_work_end_time, day.tomorrow) if day.overtime_finished_at.present? %></td>
                         <td><%= day.business_process_content %></td>
-                        <td><%= attendance.select :indicater_reply, ['なし','申請中'] %></td>
+                        <td><%= attendance.select :indicater_reply, ['なし','申請中', '承認', '否認'] %></td>
                         <td><%= attendance.check_box :tomorrow_edit %></td>
-                        <td><%= link_to "確認", "#" %></td>
+                        <td><%= link_to "確認", show_check_user_path %></td>
                       </tr>
                     <% end %>
                   <% end %>
