@@ -49,48 +49,6 @@ class AttendancesController < ApplicationController
     @superiors = User.where(superior: true).where.not(id: @user.id)
   end
   
-  
-
-  def update_one_month
-    a_count = 0
-    ActiveRecord::Base.transaction do # トランザクションを開始します。
-      attendances_params.each do |id, item|
-        if item[:attendances_request_superior].present?
-          if item[:edit_started_at].blank? && item[:edit_finished_at].present?
-            flash[:danger] = "出勤時間が必要です。"
-            redirect_to attendances_edit_one_month_user_url(date: params[:date])
-            return
-          elsif item[:edit_started_at].present? && item[:edit_finished_at].blank?
-            flash[:danger] = "退勤時間が必要です。"
-            redirect_to attendances_edit_one_month_user_url(date: params[:date])
-            return
-          elsif item[:edit_started_at].present? && item[:edit_finished_at].present? && item[:edit_started_at].to_s > item[:edit_finished_at].to_s
-            flash[:danger] = "時刻に誤りがあります。"
-            redirect_to attendances_edit_one_month_user_url(date: params[:date])
-            return
-          end
-          attendance = Attendance.find(id)
-          attendance.indicater_reply_edit = "申請中"
-          a_count += 1
-          attendance.update!(item)
-        end
-      end
-      if a_count > 0
-        flash[:success] = "勤怠編集を#{a_count}件、申請しました。"
-        redirect_to user_url(date: params[:date])
-        return
-      else
-        flash[:danger] = "上長を選択してください。"
-        redirect_to attendances_edit_one_month_user_url(date: params[:date])
-        return
-      end
-    end
-  rescue ActiveRecord::RecordInvalid # トランザクションによるエラーの分岐です。
-    flash[:danger] = "無効な入力データがあった為、更新をキャンセルしました。"
-    redirect_to attendances_edit_one_month_user_url(date: params[:date])
-    return
-  end
-  
   def edit_overtime_notice
     @attendances = Attendance.where(indicater_check: @user.name, indicater_reply: "申請中").order(:worked_on).group_by(&:user_id)
   end
@@ -99,20 +57,37 @@ class AttendancesController < ApplicationController
   def update_overtime_notice
     overtime_notice_params.each do |id, item|
       attendance = Attendance.find(id)
-      if item[:tommorrow_edit] == "1"
+      if item[:tomorrow_edit] == "1"
         if item[:indicater_reply] == "なし"
           attendance.overtime_finished_at = nil
-          attendance.tommorrow = nil
+          attendance.tomorrow = nil
           attendance.business_process_content = nil
           attendance.indicater_check = nil
         end
         attendance.update(item)
-        flash[:success] = "残業申請を承認しました。"
+        flash[:success] = "勤怠の変更申請を送信しました。"
       else
-        flash[:danger] = "残業申請の承認に失敗しました。"
+        flash[:danger] = "残業申請の承認に失敗しました。" 
       end
     end
+    redirect_to user_url
   end
+  
+  # １ヶ月の勤怠申請
+  def update_month_request
+    if update_month_params[:one_month_request_superior].present?
+      flash[:success] = "勤怠申請を送信しました"
+    else 
+      flash[:danger] = "上長を選択してください"
+    end
+    redirect_to user_url
+  end
+  
+  # １ヶ月の勤怠承認
+  def edit_month_approval
+    
+  end
+        
     
   
   
@@ -133,18 +108,14 @@ class AttendancesController < ApplicationController
     
      # 残業申請承認
     def overtime_notice_params
-      params.require(:user).permit(attendances: [:indicater_reply, :tommorrow_edit])[:attendances]
+      params.require(:user).permit(attendances: [:indicater_reply, :tomorrow_edit])[:attendances]
     end
     
     def set_attendance
       @attendance = Attendance.find(params[:id])
     end
-
-   
     
-     # 残業申請承認
-    def overtime_notice_params
-      params.require(:user).permit(attendances: [:indicater_reply, :tommorrow_edit])[:attendances]
+    def update_month_params
+      params.permit(:one_month_request_superior)
     end
-    
 end

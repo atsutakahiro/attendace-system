@@ -16,7 +16,8 @@ Rails.application.routes.draw do
       get 'attendances/edit_one_month' # この行が追加対象です。
       patch 'attendances/update_one_month'
       # １ヶ月の勤怠申請
-      patch 'attendances/update_one_month_request'
+      patch 'attendances/update_month_request'
+      # 勤怠確認
       get 'show_check'
       
     end
@@ -28,6 +29,9 @@ Rails.application.routes.draw do
         # 残業承認
         get 'edit_overtime_notice'
         patch 'update_overtime_notice'
+        # １ヶ月の残業承認
+        get 'edit_month_approval'
+        patch 'update_month_approval'
       end
   end
   end

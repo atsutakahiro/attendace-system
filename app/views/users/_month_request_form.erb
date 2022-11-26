@@ -1,0 +1,4 @@
+<%= form_with url: attendances_update_month_request_user_path(@user), method: :patch, local: true do |f| %>
+  <%= f.collection_select :one_month_request_superior, @superiors, :name, :name, :include_blank => "選択してください" %>
+  <%= f.submit "申請", class: "btn btn-primary btn-block" %>
+<% end %>  

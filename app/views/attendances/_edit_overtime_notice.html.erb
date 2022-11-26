@@ -14,7 +14,7 @@
             <% @attendances.each do |id, attendances| %>
               <% user = User.find(id) %>
               <h1 class="modal-title"><%= "【#{user.name}からの残業申請】" %></h1>
-               <table class="table table-bordered table-condensed table-hover" id="table-attendances">
+               <table class="table table-bordered" id="table-attendances">
                 <thead>
                   <tr>
                     <th rowspan="2">日付</th>
@@ -55,7 +55,7 @@
                 </tbody>
               </table>
               <div class="center">
-                <%= f.submit "変更を返信する", class: "btn btn-primary btn-block" %>
+                <%= f.submit "変更を申請する", class: "btn btn-primary btn-block" %>
               </div>
             <% end %>
           <% end %>
