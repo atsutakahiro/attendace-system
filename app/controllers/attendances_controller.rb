@@ -1,6 +1,6 @@
 class AttendancesController < ApplicationController
   before_action :set_user, only: [:edit_one_month, :update_one_month]
-  before_action :set_user_id, only: [:update, :edit_overtime_request, :edit_overtime_notice, :update_overtime_request, :update_overtime_notice]
+  before_action :set_user_id, only: [:update, :edit_overtime_request, :edit_overtime_notice, :update_overtime_request, :update_overtime_notice, :update_month_approval, :edit_month_approval]
   before_action :logged_in_user, only: [:update, :edit_one_month, :update_one_month]
   before_action :admin_or_correct_user, only: [:update, :edit_one_month, :update_one_month]
   before_action :set_one_month, only: [:edit_one_month]
@@ -85,7 +85,10 @@ class AttendancesController < ApplicationController
   
   # １ヶ月の勤怠承認
   def edit_month_approval
-    
+    @attendances = Attendance.where(indicater_check: @user.name, indicater_reply: "申請中").order(:worked_on).group_by(&:user_id)
+  end
+  
+  def update_month_approval
   end
         
     
