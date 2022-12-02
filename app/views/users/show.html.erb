@@ -33,7 +33,7 @@
 <div class="upp">
   <% if @user.superior? && current_user?(@user) %>
       <%= link_to "【所属長承認申請のお知らせ】", edit_month_approval_user_attendance_path(@user), remote: true, class: "notice-color" %>
-      <span style="border: solid 3px red; color: red;"><%= link_to "#{@overtime_count}件の通知があります", edit_month_approval_user_attendance_path(@user), remote: true, class: "notice-color" %></span>
+      <span style="border: solid 3px red; color: red;"><%= link_to "#{@month_approval_count}件の通知があります", edit_month_approval_user_attendance_path(@user), remote: true, class: "notice-color" %></span>
    
     <% if @overtime_count > 0 %>
       <%= link_to "【残業申請のお知らせ】", edit_overtime_notice_user_attendance_path(@user), remote: true, class: "notice-color" %>

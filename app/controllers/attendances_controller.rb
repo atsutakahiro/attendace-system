@@ -4,7 +4,7 @@ class AttendancesController < ApplicationController
   before_action :logged_in_user, only: [:update, :edit_one_month, :update_one_month]
   before_action :admin_or_correct_user, only: [:update, :edit_one_month, :update_one_month]
   before_action :set_one_month, only: [:edit_one_month]
-  before_action :set_attendance, only: [:update, :edit_overtime_request, :update_overtime_request]
+  before_action :set_attendance, only: [:update, :edit_overtime_request, :update_overtime_request, :update_month_request]
   UPDATE_ERROR_MSG = "勤怠登録に失敗しました。やり直してください。"
 
   # 残業申請モーダル
@@ -75,17 +75,25 @@ class AttendancesController < ApplicationController
   
   # １ヶ月の勤怠申請
   def update_month_request
-    if update_month_params[:one_month_request_superior].present?
-      flash[:success] = "勤怠申請を送信しました"
-    else 
-      flash[:danger] = "上長を選択してください"
+    month_request_params.each do |id, item|
+      attendance = Attendance.find(id)
+      if item[:one_month_request_superior].present?
+        item[:one_month_approval_status] = "申請中"
+        if attendance.update(item)
+          flash[:success] = "勤怠申請を送信しました"
+        else 
+          flash[:danger] = "勤怠申請を送信できませんでした。"
+        end  
+      else
+        flash[:danger] = "所属長を選択してください"
+      end
     end
     redirect_to user_url
   end
   
   # １ヶ月の勤怠承認
   def edit_month_approval
-    @attendances = Attendance.where(indicater_check: @user.name, indicater_reply: "申請中").order(:worked_on).group_by(&:user_id)
+    @attendances = Attendance.where(one_month_request_superior: @user.name).order(:worked_on).group_by(&:user_id)
   end
   
   def update_month_approval
@@ -118,7 +126,7 @@ class AttendancesController < ApplicationController
       @attendance = Attendance.find(params[:id])
     end
     
-    def update_month_params
-      params.permit(:one_month_request_superior)
+    def month_request_params
+      params.require(:user).permit(attendances: [:one_month_request_superior, :one_month_approval_status])[:attendances]
     end
 end
