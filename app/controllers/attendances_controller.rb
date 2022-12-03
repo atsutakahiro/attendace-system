@@ -46,7 +46,21 @@ class AttendancesController < ApplicationController
   end
 
   def edit_one_month
-    @superiors = User.where(superior: true).where.not(id: @user.id)
+  end
+  
+  # １ヶ月分の勤怠を更新します
+  def update_one_month 
+    ActiveRecord::Base.transaction do
+      attendances_params.each do |id, item|
+        attendance = Attendance.find(id)
+        attendance.update_attributes!(item)
+      end
+    end
+    flash[:success] = "１ヶ月分の勤怠情報を更新しました。"
+    redirect_to user_url(date: params[:date])
+  rescue ActiveRecord::RecordInvalid
+    flash[:danger] = "無効な入力データがあった為、更新をキャンセルしました。"
+    redirect_to attendances_edit_one_month_user_url(date: params[:date])
   end
   
   def edit_overtime_notice
@@ -110,6 +124,10 @@ class AttendancesController < ApplicationController
         flash[:danger] = "編集権限がありません。"
         redirect_to(root_url)
       end
+    end
+
+    def attendances_params
+      params.require(:user).permit(attendances:[:started_at, :finished_at, :note])[:attendances]
     end
     
      # 残業申請モーダルの情報
