@@ -26,9 +26,15 @@ Rails.application.routes.draw do
         # 残業申請モーダル
         get 'edit_overtime_request'
         patch 'update_overtime_request'  
+        
         # 残業承認
         get 'edit_overtime_notice'
         patch 'update_overtime_notice'
+        
+        # １ヶ月の勤怠変更承認
+        get 'edit_month_change'
+        patch 'update_one_change'
+        
         # １ヶ月の残業承認
         get 'edit_month_approval'
         patch 'update_month_approval'

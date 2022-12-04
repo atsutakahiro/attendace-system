@@ -46,6 +46,7 @@ class AttendancesController < ApplicationController
   end
 
   def edit_one_month
+    @superiors = User.where(superior: true).where.not(id: @user.id )
   end
   
   # １ヶ月分の勤怠を更新します
