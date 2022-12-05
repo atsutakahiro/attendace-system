@@ -1,11 +1,11 @@
 class AttendancesController < ApplicationController
   before_action :set_user, only: [:edit_one_month, :update_one_month]
-  before_action :set_user_id, only: [:update, :edit_overtime_request, :edit_overtime_notice, :update_overtime_request, :update_overtime_notice, :update_month_approval, :edit_month_approval]
+  before_action :set_user_id, only: [:update, :edit_overtime_request, :edit_overtime_notice, :update_overtime_request, :update_overtime_notice, :update_month_approval, :edit_month_approval, :edit_month_change]
   before_action :logged_in_user, only: [:update, :edit_one_month, :update_one_month]
   before_action :admin_or_correct_user, only: [:update, :edit_one_month, :update_one_month]
   before_action :set_one_month, only: [:edit_one_month]
   before_action :set_attendance, only: [:update, :edit_overtime_request, :update_overtime_request, :update_month_request]
-  UPDATE_ERROR_MSG = "勤怠登録に失敗しました。やり直してください。"
+  UPDATE_ERROR_MSG = "勤怠登録に失敗しました。やり直してださい。"
 
   # 残業申請モーダル
   def edit_overtime_request
@@ -106,12 +106,17 @@ class AttendancesController < ApplicationController
     redirect_to user_url
   end
   
-  # １ヶ月の勤怠承認
+  # 所属長承認申請申請のお知らせ
   def edit_month_approval
     @attendances = Attendance.where(one_month_request_superior: @user.name).order(:worked_on).group_by(&:user_id)
   end
   
   def update_month_approval
+  end
+  
+  # 残業申請のお知らせ
+  def edit_month_change
+    @attendances = Attendance.where(indicater_request: @user.name).order(:worked_on).group_by(&:user_id)
   end
         
     
@@ -128,7 +133,7 @@ class AttendancesController < ApplicationController
     end
 
     def attendances_params
-      params.require(:user).permit(attendances:[:started_at, :finished_at, :note])[:attendances]
+      params.require(:user).permit(attendances: [:started_at, :finished_at, :note, :next_day, :indicater_request])[:attendances]
     end
     
      # 残業申請モーダルの情報

@@ -36,7 +36,7 @@
       <span style="border: solid 3px red; color: red;"><%= link_to "#{@month_approval_count}件の通知があります", edit_month_approval_user_attendance_path(@user), remote: true, class: "notice-color" %></span>
    
       <%= link_to "【勤怠変更のお知らせ】",edit_month_change_user_attendance_path(@user), remote: true, class: "notice-color" %>
-      <span style="border: solid 3px red; color: red;"><%= link_to "#{@month_approval_count}件の通知があります", edit_month_change_user_attendance_path(@user), remote: true, class: "notice-color" %></span>
+      <span style="border: solid 3px red; color: red;"><%= link_to "#{@month_change_count}件の通知があります", edit_month_change_user_attendance_path(@user), remote: true, class: "notice-color" %></span>
 
     <% if @overtime_count > 0 %>
       <%= link_to "【残業申請のお知らせ】", edit_overtime_notice_user_attendance_path(@user), remote: true, class: "notice-color" %>
@@ -70,7 +70,7 @@
        <th colspan="2">終了予定時間</th>	
        <th rowspan="2">時間外時間</th>
        <th rowspan="2">業務処理内容</th>
-       <th rowspan="2">指示書確認㊞</th>
+       <th rowspan="2">指示者確認㊞</th>
      </tr>	
      <tr>
        <th>時</th>
@@ -156,6 +156,7 @@
 <div id= "edit-overtime-request" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
 <div id= "edit-overtime-notice" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
 <div id= "edit-month_approval" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<div id= "edit-month_change" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
 
 
 
