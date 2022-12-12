@@ -8,7 +8,7 @@
     <div class="modal-body">
       <div class="row">
         <div class="col-md-12">
-          <%= form_with(model: @user, url: update_one_change_user_attendance_path(@user), local: true, method: :patch) do |f| %>
+          <%= form_with(model: @user, url: update_month_change_user_attendance_path(@user), local: true, method: :patch) do |f| %>
             <% @attendances.each do |id, attendances| %>
               <% user = User.find(id) %>
               <h1 class="modal-title"><%= "【#{user.name}からの勤怠変更申請】" %></h1>
@@ -50,7 +50,7 @@
                         <td><%= day.started_at.hour if day.started_at.present? %></td>
                         <td><%= day.started_at.min if day.started_at.present? %></td>
                         <td><%= day.finished_at.hour if day.finished_at.present? %></td>
-                        <td><%= day.finished_at.min if day.started_at.present? %></td>
+                        <td><%= day.finished_at.min if day.finished_at.present? %></td>
                         <td><%= day.edit_started_at.hour if day.edit_started_at.present? %></td>
                         <td><%= day.edit_started_at.min if day.edit_started_at.present? %></td>
                         <td><%= day.edit_finished_at.hour if day.edit_finished_at.present? %></td>
@@ -64,10 +64,10 @@
                   <% end %>
                 </tbody>
               </table>
-              <div class="center">
-                <%= f.submit "変更を送信する", class: "btn btn-primary btn-block" %>
-              </div>
             <% end %>
+            <div class="center">
+              <%= f.submit "変更を送信する", class: "btn btn-primary btn-block" %>
+            </div>
           <% end %>
         </div>
       </div>

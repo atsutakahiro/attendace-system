@@ -33,7 +33,7 @@ Rails.application.routes.draw do
         
         # １ヶ月の勤怠変更承認
         get 'edit_month_change'
-        patch 'update_one_change'
+        patch 'update_month_change'
         
         # １ヶ月の残業承認
         get 'edit_month_approval'

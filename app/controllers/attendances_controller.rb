@@ -6,6 +6,8 @@ class AttendancesController < ApplicationController
   before_action :set_one_month, only: [:edit_one_month]
   before_action :set_attendance, only: [:update, :edit_overtime_request, :update_overtime_request, :update_month_request]
   UPDATE_ERROR_MSG = "勤怠登録に失敗しました。やり直してださい。"
+  NO_CHECK_ERROR_MSG = "変更にチェックがないものは更新できません。"
+  INVALID_ERROR_MSG = "無効な入力があった為、更新をキャンセルしました"
 
   # 残業申請モーダル
   def edit_overtime_request
@@ -54,14 +56,22 @@ class AttendancesController < ApplicationController
     ActiveRecord::Base.transaction do
       attendances_params.each do |id, item|
         attendance = Attendance.find(id)
-        attendance.update_attributes!(item)
+        if item[:edit_started_at].present? && item[:edit_finished_at].present?
+          if item[:note].present? && item[:indicater_request].present?
+            attendance.indicater_select = "申請中"
+            attendance.update_attributes!(item)
+          else
+            flash[:danger] = "申請箇所には出勤時間、退勤時間、備考、指示者確認が必要です"
+            redirect_to attendances_edit_one_month_user_url(date: params[:date]) and return
+          end
+        end    
       end
     end
     flash[:success] = "１ヶ月分の勤怠情報を更新しました。"
     redirect_to user_url(date: params[:date])
   rescue ActiveRecord::RecordInvalid
     flash[:danger] = "無効な入力データがあった為、更新をキャンセルしました。"
-    redirect_to attendances_edit_one_month_user_url(date: params[:date])
+    redirect_to edit_month_change_user_attendance_url(date: params[:date])
   end
   
   def edit_overtime_notice
@@ -116,8 +126,37 @@ class AttendancesController < ApplicationController
   
   # 残業申請のお知らせ
   def edit_month_change
-    @attendances = Attendance.where(indicater_request: @user.name).order(:worked_on).group_by(&:user_id)
+    @attendances = Attendance.where(indicater_request: @user.name, indicater_select: "申請中").order(:worked_on).group_by(&:user_id)
   end
+  
+  def update_month_change
+    ActiveRecord::Base.transaction do
+      month_change_params.each do |id, item|
+        attendance = Attendance.find(id)
+        if params[:user][:attendances][id][:month_change] == "1"
+          if attendance.started_at.nil? || attendance.finished_at.nil?
+            attendance.started_at = attendance.edit_started_at
+            attendance.finished_at = attendance.edit_finished_at
+          end
+          attendance.update_attributes!(item)
+        else
+          flash[:danger] = NO_CHECK_ERROR_MSG
+        end
+      end
+    end
+    flash[:success] = "勤怠変更の決済を更新しました。"
+    redirect_to user_url
+  rescue ActiveRecord::RecordInvalid
+    flash[:danger] = INVALID_ERROR_MSG
+    redirect_to user_url
+  end
+
+
+        
+        
+      
+        
+          
         
     
   
@@ -133,7 +172,7 @@ class AttendancesController < ApplicationController
     end
 
     def attendances_params
-      params.require(:user).permit(attendances: [:started_at, :finished_at, :note, :next_day, :indicater_request])[:attendances]
+      params.require(:user).permit(attendances: [:started_at, :edit_started_at, :finished_at, :edit_finished_at, :note, :next_day, :indicater_request])[:attendances]
     end
     
      # 残業申請モーダルの情報
@@ -152,5 +191,9 @@ class AttendancesController < ApplicationController
     
     def month_request_params
       params.require(:user).permit(attendances: [:one_month_request_superior, :one_month_approval_status])[:attendances]
+    end
+    
+    def month_change_params
+      params.require(:user).permit(attendances: [:indicater_select])[:attendances]
     end
 end

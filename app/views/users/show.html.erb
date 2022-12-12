@@ -85,27 +85,36 @@
     </thead>
     <tbody>
       <% @attendances.each do |day| %>
-        
         <tr>
           <td><%= link_to "残業申請", edit_overtime_request_user_attendance_path(@user,day), remote: true, class: "btn btn-primary" %></td>
           <td><%= l(day.worked_on, format: :short) %></td>
           <td class="<%= "wday#{day.worked_on.wday}" %>"><%= $days_of_the_week[day.worked_on.wday] %></td>
-          <td><%= l(day.started_at.floor_to(15.minutes), format: :hour) if day.started_at.present? %></td>
-          <td><%= l(day.started_at.floor_to(15.minutes), format: :minutes) if day.started_at.present? %></td>
+          <% if day.edit_started_at.nil? || day.indicater_select == "否認" %>
+            <td class="col-sm-2"><%= l(day.started_at.floor_to(15.minutes), format: :hour) if day.started_at.present? %></td>
+            <td class="col-sm-2"><%= l(day.started_at.floor_to(15.minutes), format: :minutes) if day.started_at.present? %></td>
+          <% else %>
+            <td class="col-sm-2"><%= l(day.edit_started_at.floor_to(15.minutes), format: :hour) %></td>
+            <td class="col-sm-2"><%= l(day.edit_started_at.floor_to(15.minutes), format: :minutes) %></td>
+          <% end %>
           <td>
             <% if btn_text = attendance_state(day) %>
               <%= link_to "#{btn_text}", user_attendance_path(@user, day), method: :patch, class: "btn btn-primary btn-attendance" %>
             <% end %>
           </td>
-          <td class="col-sm-2"><%= l(day.finished_at.floor_to(15.minutes), format: :hour) if day.finished_at.present? %></td>
-          <td class="col-sm-2"><%= l(day.finished_at.floor_to(15.minutes), format: :minutes) if day.finished_at.present? %></td>
-          <td></td>
+          <% if day.edit_finished_at.nil? || day.indicater_select == "否認" %>
+            <td class="col-sm-2"><%= l(day.finished_at.floor_to(15.minutes), format: :hour) if day.finished_at.present? %></td>
+            <td class="col-sm-2"><%= l(day.finished_at.floor_to(15.minutes), format: :minutes) if day.finished_at.present? %></td>
+          <% else %>
+            <td class="col-sm-2"><%= l(day.edit_finished_at.floor_to(15.minutes), format: :hour) %></td>
+            <td class="col-sm-2"><%= l(day.edit_finished_at.floor_to(15.minutes), format: :minutes) %></td>
+          <% end %>  
           <td>
             <% if day.started_at.present? && day.finished_at.present? %>
               <%= str_times = working_times(day.started_at, day.finished_at) %>
               <% @total_working_times = @total_working_times.to_f + str_times.to_f %>
             <% end %>
           </td>
+          <td></td>
           <td><%= day.note %></td>
           <td><%= day.overtime_finished_at.try(:strftime, "%H" ) %></td>
           <td><%= day.overtime_finished_at.try(:strftime, "%M" ) %></td>
