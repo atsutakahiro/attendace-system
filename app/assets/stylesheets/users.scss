@@ -26,7 +26,18 @@
   td {
     vertical-align: middle;
     text-align: center;
+    border-collapse: collapse;
   }
+  table-layout: fixed;
+  width: 100%;
+}
+// 残業申請ボタンの大きさ
+.button {
+  width: 80px;
+}
+
+.box{
+  width: 2px;
 }
 
 .notice-color {
@@ -78,4 +89,17 @@
 
 .wday6 {
   color: blue;
+}
+
+// 勤怠変更承認モーダルウィンドウ
+#month{
+ th {
+    vertical-align: middle;
+    text-align: center;
+  }
+  td {
+    vertical-align: middle;
+    text-align: center;
+    border-collapse: collapse;
+  } 
 }

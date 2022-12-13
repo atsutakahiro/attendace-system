@@ -25,9 +25,16 @@
                 <td><%= attendance.time_field :started_at, readonly: true, class: "form-control" %></td>
                 <td><%= attendance.time_field :finished_at, readonly: true, class: "form-control" %></td>
               <% else %>
-                <td><%= attendance.time_field :edit_started_at, class: "form-control" %></td>
-                <td><%= attendance.time_field :edit_finished_at, class: "form-control" %></td>
-              <% end %>  
+                <td><%= attendance.time_field :started_edit_at, class: "form-control" %></td>
+                <td><%= attendance.time_field :finished_edit_at, class: "form-control" %></td>
+                <% if day.indicater_select == "承認" && day.started_before_at.nil? %>
+                  <%= attendance.hidden_field :started_before_at, value: day.started_at %>
+                  <%= attendance.hidden_field :finished_before_at, value: day.finished_at %>
+                <% end %>
+                  <%= attendance.hidden_field :started_at, value: day.started_edit_at if day.indicater_select == "承認" %>
+                  <%= attendance.hidden_field :finished_at, value: day.finished_edit_at if day.indicater_select == "承認" %>
+              <% end %>
+                 
               <td><%= attendance.check_box :next_day %></td>
               <td>
                 <% if day.started_at.present? && day.finished_at.present? %>

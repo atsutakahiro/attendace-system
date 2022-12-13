@@ -7,7 +7,7 @@
       <h1 class="modal-title">【残業申請】</h1>
     </div>
     <div class="modal-body">
-      <%= form_with(model: @attendance, url: update_month_change_user_attendance_path(@user, @attendance) , method: :patch , local: true) do |f| %>
+      <%= form_with(model: @attendance, url: update_overtime_request_user_attendance_path(@user, @attendance) , method: :patch , local: true) do |f| %>
         <table class="table table-bordered table-condensed overtime-table">
           <thead>
             <tr>

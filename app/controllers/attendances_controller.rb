@@ -56,7 +56,7 @@ class AttendancesController < ApplicationController
     ActiveRecord::Base.transaction do
       attendances_params.each do |id, item|
         attendance = Attendance.find(id)
-        if item[:edit_started_at].present? && item[:edit_finished_at].present?
+        if item[:started_edit_at].present? && item[:finished_edit_at].present?
           if item[:note].present? && item[:indicater_request].present?
             attendance.indicater_select = "申請中"
             attendance.update_attributes!(item)
@@ -67,7 +67,7 @@ class AttendancesController < ApplicationController
         end    
       end
     end
-    flash[:success] = "１ヶ月分の勤怠情報を更新しました。"
+    flash[:success] = "1ヶ月分の勤怠情報を更新・申請しました。"
     redirect_to user_url(date: params[:date])
   rescue ActiveRecord::RecordInvalid
     flash[:danger] = "無効な入力データがあった為、更新をキャンセルしました。"
@@ -135,8 +135,8 @@ class AttendancesController < ApplicationController
         attendance = Attendance.find(id)
         if params[:user][:attendances][id][:month_change] == "1"
           if attendance.started_at.nil? || attendance.finished_at.nil?
-            attendance.started_at = attendance.edit_started_at
-            attendance.finished_at = attendance.edit_finished_at
+            attendance.started_at = attendance.started_edit_at
+            attendance.finished_at = attendance.finished_edit_at
           end
           attendance.update_attributes!(item)
         else
@@ -172,7 +172,7 @@ class AttendancesController < ApplicationController
     end
 
     def attendances_params
-      params.require(:user).permit(attendances: [:started_at, :edit_started_at, :finished_at, :edit_finished_at, :note, :next_day, :indicater_request])[:attendances]
+      params.require(:user).permit(attendances: [:started_at, :started_edit_at, :started_before_at, :finished_at, :finished_edit_at, :finished_before_at, :note, :next_day, :indicater_request])[:attendances]
     end
     
      # 残業申請モーダルの情報

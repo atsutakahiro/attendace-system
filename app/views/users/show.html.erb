@@ -33,11 +33,14 @@
 <div class="upp">
   <% if @user.superior? && current_user?(@user) %>
       <%= link_to "【所属長承認申請のお知らせ】", edit_month_approval_user_attendance_path(@user), remote: true, class: "notice-color" %>
-      <span style="border: solid 3px red; color: red;"><%= link_to "#{@month_approval_count}件の通知があります", edit_month_approval_user_attendance_path(@user), remote: true, class: "notice-color" %></span>
-   
+      <span style="border: solid 3px red; color: red;"><%= link_to "#{@month_approval_count}件の通知があります", edit_month_approval_user_attendance_path(@user), remote: true, class: "notice-color" %></span><br>
+   <% if @month_change_count > 0 %>
       <%= link_to "【勤怠変更のお知らせ】",edit_month_change_user_attendance_path(@user), remote: true, class: "notice-color" %>
-      <span style="border: solid 3px red; color: red;"><%= link_to "#{@month_change_count}件の通知があります", edit_month_change_user_attendance_path(@user), remote: true, class: "notice-color" %></span>
-
+      <span style="border: solid 3px red; color: red;"><%= link_to "#{@month_change_count}件の通知があります", edit_month_change_user_attendance_path(@user), remote: true, class: "notice-color" %></span><br>
+   <% else %>
+     <%= "【勤怠変更のお知らせ】" %>
+   <% end %>
+     
     <% if @overtime_count > 0 %>
       <%= link_to "【残業申請のお知らせ】", edit_overtime_notice_user_attendance_path(@user), remote: true, class: "notice-color" %>
       <span style="border: solid 3px red; color: red;"><%= link_to "#{@overtime_count}件の通知があります", edit_overtime_notice_user_attendance_path(@user), remote: true, class: "notice-color" %></span>
@@ -48,29 +51,28 @@
 </div>
 
 <div class="btn-users-show">
-  <%= link_to "1ヶ月の勤怠編集へ", attendances_edit_one_month_user_path(dateedit_user_path: @first_day), class: "btn btn-primary" %>
+  <%= link_to "勤怠を編集", attendances_edit_one_month_user_path(dateedit_user_path: @first_day), class: "btn btn-primary" %>
 </div>	
 <div>
  <table class="table table-bordered table-condensed table-hover" id="table-attendances">	
     <thead>
      <tr>	
-       <th colspan="3"></th>
+       <th rowspan="3", class="button">残業申請</th>
+       <th rowspan="3">日付</th>
+       <th rowspan="3">曜日</th>
        <th colspan="8">【実績】</th>
        <th colspan="5">所定外勤務</th>
      </tr>　　　　
   
      <tr>
-       <th rowspan="2">残業申請</th>
-       <th rowspan="2">日付</th>
-       <th rowspan="2">曜日</th>	
-       <th colspan="3">出社</th>	
-       <th colspan="3">退社</th>	
+       <th colspan="3">出社</th>
+       <th colspan="3">退社</th>
        <th rowspan="2">在社時間</th>	
        <th rowspan="2">備考</th>	
        <th colspan="2">終了予定時間</th>	
-       <th rowspan="2">時間外時間</th>
-       <th rowspan="2">業務処理内容</th>
-       <th rowspan="2">指示者確認㊞</th>
+       <th rowspan="2">時間外時間</th>	
+       <th rowspan="2">業務処理内容</th>	
+       <th rowspan="2">指示者確認㊞</th>	
      </tr>	
      <tr>
        <th>時</th>
@@ -86,35 +88,39 @@
     <tbody>
       <% @attendances.each do |day| %>
         <tr>
-          <td><%= link_to "残業申請", edit_overtime_request_user_attendance_path(@user,day), remote: true, class: "btn btn-primary" %></td>
+          <td class="button"><%= link_to "残業申請", edit_overtime_request_user_attendance_path(@user,day), remote: true, class: "btn btn-primary btn-sm" %></td>
           <td><%= l(day.worked_on, format: :short) %></td>
           <td class="<%= "wday#{day.worked_on.wday}" %>"><%= $days_of_the_week[day.worked_on.wday] %></td>
-          <% if day.edit_started_at.nil? || day.indicater_select == "否認" %>
+          <% if day.started_edit_at.nil? || day.indicater_select == "否認" %>
             <td class="col-sm-2"><%= l(day.started_at.floor_to(15.minutes), format: :hour) if day.started_at.present? %></td>
             <td class="col-sm-2"><%= l(day.started_at.floor_to(15.minutes), format: :minutes) if day.started_at.present? %></td>
           <% else %>
-            <td class="col-sm-2"><%= l(day.edit_started_at.floor_to(15.minutes), format: :hour) %></td>
-            <td class="col-sm-2"><%= l(day.edit_started_at.floor_to(15.minutes), format: :minutes) %></td>
+            <td class="col-sm-2"><%= l(day.started_edit_at.floor_to(15.minutes), format: :hour) %></td>
+            <td class="col-sm-2"><%= l(day.started_edit_at.floor_to(15.minutes), format: :minutes) %></td>
           <% end %>
-          <td>
-            <% if btn_text = attendance_state(day) %>
-              <%= link_to "#{btn_text}", user_attendance_path(@user, day), method: :patch, class: "btn btn-primary btn-attendance" %>
-            <% end %>
-          </td>
-          <% if day.edit_finished_at.nil? || day.indicater_select == "否認" %>
+          <% if current_user == @user %>
+            <td>
+              <% if btn_text = attendance_state(day) %>
+                <%= link_to "#{btn_text}", user_attendance_path(@user, day), method: :patch, class: "btn btn-primary btn-attendance" %>
+              <% end %>
+            </td>
+          <% else %>
+            <td></td>
+          <% end %>  
+          <% if day.finished_edit_at.nil? || day.indicater_select == "否認" %>
             <td class="col-sm-2"><%= l(day.finished_at.floor_to(15.minutes), format: :hour) if day.finished_at.present? %></td>
             <td class="col-sm-2"><%= l(day.finished_at.floor_to(15.minutes), format: :minutes) if day.finished_at.present? %></td>
           <% else %>
-            <td class="col-sm-2"><%= l(day.edit_finished_at.floor_to(15.minutes), format: :hour) %></td>
-            <td class="col-sm-2"><%= l(day.edit_finished_at.floor_to(15.minutes), format: :minutes) %></td>
+            <td class="col-sm-2"><%= l(day.finished_edit_at.floor_to(15.minutes), format: :hour) %></td>
+            <td class="col-sm-2"><%= l(day.finished_edit_at.floor_to(15.minutes), format: :minutes) %></td>
           <% end %>  
+          <td></td>
           <td>
             <% if day.started_at.present? && day.finished_at.present? %>
               <%= str_times = working_times(day.started_at, day.finished_at) %>
               <% @total_working_times = @total_working_times.to_f + str_times.to_f %>
             <% end %>
           </td>
-          <td></td>
           <td><%= day.note %></td>
           <td><%= day.overtime_finished_at.try(:strftime, "%H" ) %></td>
           <td><%= day.overtime_finished_at.try(:strftime, "%M" ) %></td>

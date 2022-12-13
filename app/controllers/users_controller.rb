@@ -31,6 +31,7 @@ class UsersController < ApplicationController
     @month = Attendance.where(indicater_reply_month: "申請中", indicater_check_month: @user.name).count
     @superiors = User.where(superior: true).where.not(id: @user.id )
     @month_approval_count = Attendance.where(one_month_request_superior: @user.name).count
+    @month_change_count = Attendance.where(indicater_select: "申請中", indicater_request: @user.name).count
     
     # csv出力
     respond_to do |format|
