@@ -72,6 +72,10 @@
   }  
 }
 
+.result {
+  font-size: 12px;
+}
+
 /* 基本情報編集モーダルウインドウ */
 
 .label-basic-info {
@@ -102,4 +106,8 @@
     text-align: center;
     border-collapse: collapse;
   } 
+}
+
+.form {
+  width: 20px;
 }

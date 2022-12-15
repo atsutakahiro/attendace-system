@@ -126,17 +126,18 @@
           <td><%= day.overtime_finished_at.try(:strftime, "%M" ) %></td>
           <td></td>
           <td><%= day.business_process_content if day.business_process_content.present? %></td>
-          <td>
+          <td class="result">
             <% if day.indicater_reply == "申請中" %>
               <%= "#{day.indicater_check}へ残業#{day.indicater_reply}" %><br>
             <% elsif (day.indicater_reply == "承認") || (day.indicater_reply == "否認") %>
               <%= "#{day.indicater_check}より残業#{day.indicater_reply}" %><br>
             <% end %>
-            <% if day.indicater_reply_edit == "申請中" %>
-              <%= "#{day.indicater_check}へ勤怠変更#{day.indicater_reply_edit}" %><br>
-            <% elsif (day.indicater_reply_edit == "承認") || (day.indicater_reply_edit == "否認") %>
-            <%= "#{day.indicater_check_edit}より勤怠#{day.indicater_reply_edit}" %><br>
-            <% end %>
+           
+            <% if day.indicater_select == "申請中" %>
+              <%= "#{day.indicater_request}へ勤怠変更申請中" %>
+            <% elsif (day.indicater_select == "承認") || (day.indicater_select == "否認") %>
+              <%= "#{day.indicater_request}より勤怠変更#{day.indicater_select}" %>
+            <% end %>  
           </td>
         </tr>
       <% end %>

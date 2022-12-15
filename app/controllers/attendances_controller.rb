@@ -134,10 +134,6 @@ class AttendancesController < ApplicationController
       month_change_params.each do |id, item|
         attendance = Attendance.find(id)
         if params[:user][:attendances][id][:month_change] == "1"
-          if attendance.started_at.nil? || attendance.finished_at.nil?
-            attendance.started_at = attendance.started_edit_at
-            attendance.finished_at = attendance.finished_edit_at
-          end
           attendance.update_attributes!(item)
         else
           flash[:danger] = NO_CHECK_ERROR_MSG
