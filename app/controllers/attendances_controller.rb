@@ -52,26 +52,26 @@ class AttendancesController < ApplicationController
   end
   
   # １ヶ月分の勤怠を更新します
-  def update_one_month 
+  def update_one_month
     ActiveRecord::Base.transaction do
       attendances_params.each do |id, item|
         attendance = Attendance.find(id)
-        if item[:started_edit_at].present? && item[:finished_edit_at].present?
-          if item[:note].present? && item[:indicater_request].present?
-            attendance.indicater_select = "申請中"
+        if (item)[:started_edit_at].present? || (item)[:finished_edit_at].present?
+          if (item)[:indicater_request].present? && (item)[:note].present?
+            attendance.indicater_select = "申請中" 
             attendance.update_attributes!(item)
-          else
-            flash[:danger] = "申請箇所には出勤時間、退勤時間、備考、指示者確認が必要です"
+          else 
+            flash[:danger] = "申請箇所には出社、退社、備考、指示者確認㊞が必要です。"
             redirect_to attendances_edit_one_month_user_url(date: params[:date]) and return
           end
-        end    
+        end
       end
     end
     flash[:success] = "1ヶ月分の勤怠情報を更新・申請しました。"
     redirect_to user_url(date: params[:date])
   rescue ActiveRecord::RecordInvalid
-    flash[:danger] = "無効な入力データがあった為、更新をキャンセルしました。"
-    redirect_to edit_month_change_user_attendance_url(date: params[:date])
+    flash[:danger] = INVALID_ERROR_MSG
+    redirect_to attendances_edit_one_month_user_url(date: params[:date])
   end
   
   def edit_overtime_notice
