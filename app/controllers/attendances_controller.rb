@@ -116,15 +116,30 @@ class AttendancesController < ApplicationController
     redirect_to user_url
   end
   
-  # 所属長承認申請申請のお知らせ
+  # 上長による１ヶ月分の勤怠提出の決済
   def edit_month_approval
     @attendances = Attendance.where(one_month_request_superior: @user.name).order(:worked_on).group_by(&:user_id)
   end
   
   def update_month_approval
+    ActiveRecord::Base.transaction do
+      month_approval_params.each do |id, item|
+        attendance = Attendance.find(id)
+        if item[:one_month_approval_check] == "1"
+          attendance.update_attributes!(item)
+        else
+          flash[:danger] = NO_CHECK_ERROR_MSG
+        end
+      end
+    end
+    flash[:success] = "勤怠変更の決済を更新しました。"
+    redirect_to user_url
+  rescue ActiveRecord::RecordInvalid
+    flash[:danger] = INVALID_ERROR_MSG
+    redirect_to user_url
   end
   
-  # 残業申請のお知らせ
+  # 上長による勤怠変更の決済
   def edit_month_change
     @attendances = Attendance.where(indicater_request: @user.name, indicater_select: "申請中").order(:worked_on).group_by(&:user_id)
   end
@@ -191,5 +206,9 @@ class AttendancesController < ApplicationController
     
     def month_change_params
       params.require(:user).permit(attendances: [:indicater_select])[:attendances]
+    end
+    
+    def month_approval_params
+      params.require(:user).permit(attendances: [:one_month_approval_check])[:attendances]
     end
 end

@@ -68,6 +68,10 @@
           <td></td>
           <td>
             <% if day.started_at.present? && day.finished_at.present? %>
+              <% if day.started_edit_at.present? || day.finished_edit_at.present? %>
+                <% started_at = started_edit_at %>
+                <% finished_at = finished_edit_at %>
+              <% end %>
               <%= str_times = working_times(day.started_at, day.finished_at) %>
               <% @total_working_times = @total_working_times.to_f + str_times.to_f %>
             <% end %>

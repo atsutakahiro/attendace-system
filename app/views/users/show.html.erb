@@ -114,17 +114,21 @@
             <td class="col-sm-2"><%= l(day.finished_edit_at.floor_to(15.minutes), format: :hour) %></td>
             <td class="col-sm-2"><%= l(day.finished_edit_at.floor_to(15.minutes), format: :minutes) %></td>
           <% end %>  
-          <td></td>
+            <td></td>
           <td>
             <% if day.started_at.present? && day.finished_at.present? %>
+              <% if day.started_edit_at.present? || day.finished_edit_at.present? %>
+                <% day.started_at = day.started_edit_at %>
+                <% day.finished_at = day.finished_edit_at %>
+              <% end %>
               <%= str_times = working_times(day.started_at, day.finished_at) %>
               <% @total_working_times = @total_working_times.to_f + str_times.to_f %>
             <% end %>
           </td>
           <td><%= day.note %></td>
-          <td><%= day.overtime_finished_at.try(:strftime, "%H" ) %></td>
-          <td><%= day.overtime_finished_at.try(:strftime, "%M" ) %></td>
-          <td></td>
+          <td><%= l(day.overtime_finished_at, format: :hour) if day.overtime_finished_at.present? %></td>
+          <td><%= l(day.overtime_finished_at.floor_to(15.minutes), format: :minutes) if day.overtime_finished_at.present? %></td>
+          <td><%= overtime_calculation(day.overtime_finished_at, @user.designated_work_end_time, day.tomorrow) if day.overtime_finished_at.present? %></td>
           <td><%= day.business_process_content if day.business_process_content.present? %></td>
           <td class="result">
             <% if day.indicater_reply == "申請中" %>

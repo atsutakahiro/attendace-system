@@ -1,7 +1,12 @@
 <% day = @user.attendances.find_by(worked_on: @first_day) %>
+<% if day.one_month_request_superior.present? %>
+  所属長承認㊞  <%= "#{day.one_month_request_superior}へ#{day.one_month_approval_status}" %><br>
+<% else %>
+  所属長承認㊞ 未
+<% end %>
+
 <%= form_with(model: @user, url: attendances_update_month_request_user_path(@user), local: true, method: :patch) do |f| %>
   <%= f.fields_for "attendances[]", day do |attendance| %>
-    所属長承認㊞  <%= "#{day.one_month_request_superior}へ残業#{day.one_month_approval_status}" %><br>
     <%= attendance.collection_select :one_month_request_superior, @superiors, :name, :name, include_blank: true %>
   <% end %>
   <%= f.submit "申請", class: "btn btn-primary btn-block" %>
