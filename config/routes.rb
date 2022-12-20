@@ -19,6 +19,9 @@ Rails.application.routes.draw do
       patch 'attendances/update_month_request'
       # 勤怠確認
       get 'show_check'
+      # 勤怠編集ログ
+      get 'attendances/edit_log'
+      
       
     end
   resources :attendances, only: [:update] do

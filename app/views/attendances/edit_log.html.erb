@@ -1,0 +1,30 @@
+<h1>勤怠ログ</h1>
+【2022年12月の勤怠修正ログ】
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>日付</th>
+      <th>変更前出社時間</th>
+      <th>変更前退社時間</th>
+      <th>変更後出社</th>
+      <th>変更後退社</th>
+      <th>承認者</th>
+      <th>承認日</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if @indicater_select_approval.present? %>
+      <% @indicater_select_approval.each do |day| %>
+        <tr>
+          <th><%= l(day.worked_on, format: :short) %></th>
+          <th><%= l(day.started_before_at, format: :time) if day.started_before_at.present? %></th>
+          <th><%= l(day.finished_before_at, format: :time) if day.finished_before_at.present? %></th>
+          <th><%= l(day.started_edit_at, format: :time) if day.started_edit_at.present? %></th>
+          <th><%= l(day.finished_edit_at, format: :time) if day.finished_edit_at.present? %></th>
+          <th><%= day.indicater_request %></th>
+          <td><%= day.updated_at.strftime("%Y年%m月%d日") %></td>
+        </tr>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>

@@ -1,7 +1,7 @@
 class AttendancesController < ApplicationController
   before_action :set_user, only: [:edit_one_month, :update_one_month]
   before_action :set_user_id, only: [:update, :edit_overtime_request, :edit_overtime_notice, :update_overtime_request, :update_overtime_notice, :update_month_approval, :edit_month_approval, :edit_month_change]
-  before_action :logged_in_user, only: [:update, :edit_one_month, :update_one_month]
+  before_action :logged_in_user, only: [:update, :edit_one_month, :update_one_month, :edit_log]
   before_action :admin_or_correct_user, only: [:update, :edit_one_month, :update_one_month]
   before_action :set_one_month, only: [:edit_one_month]
   before_action :set_attendance, only: [:update, :edit_overtime_request, :update_overtime_request, :update_month_request]
@@ -161,7 +161,11 @@ class AttendancesController < ApplicationController
     flash[:danger] = INVALID_ERROR_MSG
     redirect_to user_url
   end
-
+  
+  def edit_log
+    @indicater_select_approval = Attendance.where(indicater_select: "承認").order(:worked_on)
+  end
+  
 
         
         
