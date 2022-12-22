@@ -163,8 +163,18 @@ class AttendancesController < ApplicationController
   end
   
   def edit_log
-    @indicater_select_approval = Attendance.where(indicater_select: "承認").order(:worked_on)
+    if params[:worked_on].present?
+      first_day = DateTime.parse(params[:worked_on] + "-" + "01") # 文字列で取得した日付に文字列の01を加えてdatetime型に型変換し月初日をセット
+      last_day = first_day.end_of_month # 月末日を取得
+      # Attendanceテーブルからworked_onの日付順で整列し、現在ログインしているユーザ、承認のものを取得し、paramsで取得した月に合致するものをセット
+      @indicater_select_approval = Attendance.order(:worked_on).where(user_id: current_user, indicater_select: "承認").where(worked_on: first_day..last_day) 
+        unless @indicater_select_approval.count > 0
+          flash.now[:danger] = "選択月の勤怠編集ログはありません。"
+        end
+    end
   end
+    
+    
   
 
         

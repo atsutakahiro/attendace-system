@@ -1,5 +1,23 @@
 <h1>勤怠ログ</h1>
-【2022年12月の勤怠修正ログ】
+【勤怠修正ログ】
+
+ <div class="row form-group">
+    <div class="col-md-2" id="search-attendance-log">
+      <%= form_with model: @attendance, url: attendances_edit_log_user_path, id: "form_edit_log", method: :get, remote: true do |f|  %>
+        <%= f.month_field(:worked_on, required: true, class: "form-control") %>
+        <%= f.button "検索", id: "btn_edit_log", class: " btn-primary search-btn form-control" %>
+      <% end %>
+    </div>
+    
+    <script>
+      $(function() {
+        $('#btn_edit_log').click(function() {
+          
+        $('#form_edit_log').submit();
+        })
+      })
+    </script>
+    
 <table class="table table-bordered">
   <thead>
     <tr>
