@@ -21,9 +21,9 @@ Rails.application.routes.draw do
       get 'show_check'
       # 勤怠編集ログ
       get 'attendances/edit_log'
-      
-      
     end
+    collection { post :import }
+    
   resources :attendances, only: [:update] do
       member do
         # 残業申請モーダル

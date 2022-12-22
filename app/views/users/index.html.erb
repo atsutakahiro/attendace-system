@@ -5,6 +5,11 @@
   <h1>検索結果</h1>
 <% end %>
 
+<%= form_with(url: import_users_path), method: :post do |f| %>
+    <%= f.file_field :file, accept: '.csv' %>
+    <%= f.submit "csvをインポート", class: "btn btn-primary csv-button" %>
+<% end %>
+
 <div class="row" id="search">
   <div class="col-lg-4">
     <%= form_with(url: users_path,method: :get, local: true) do |f| %>
