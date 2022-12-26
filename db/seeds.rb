@@ -1,16 +1,17 @@
 # coding: utf-8
 
 User.create!(name: "Sample User",
-             email: "sample@email.com",
+             email: "sample@email.com",   
              password: "password",
              password_confirmation: "password",
+             department: "管理部門",
              admin: true)
 
 User.create!(name: "上長A",
             email: "sampleA@email.com",
             password: "password",
             password_confirmation: "password",
-            affiliation: "役員",
+            department: "役員",
             employee_number: 1,
             uid: 1,
             superior: true)
@@ -19,7 +20,7 @@ User.create!(name: "上長B",
             email: "sampleB@email.com",
             password: "password",
             password_confirmation: "password",
-            affiliation: " 役員",
+            department: " 役員",
             employee_number: 2,
             uid: 2,
             superior: true)
