@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get 'bases/index'
+
   root 'static_pages#top'
   get '/signup', to: 'users#new'
 
@@ -21,6 +23,8 @@ Rails.application.routes.draw do
       get 'show_check'
       # 勤怠編集ログ
       get 'attendances/edit_log'
+      
+      get 'commuter'
     end
     collection { post :import }
     

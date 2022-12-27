@@ -1,0 +1,25 @@
+<h1>出勤社員一覧</h1>
+<table class="table table-bordered">
+  <% if @commuters.nil? %>
+      <h1>現在出勤中の社員はいません。</h1>
+  <% else %>
+    <thead>
+      <tr>
+        <th>社員番号</th>
+        <th>名前</th>
+      </tr>
+    </thead>
+    <tbody>
+        <% @commuters.each do |commuter| %>
+          <% commuter.attendances.each do |attendance| %>
+            <% if (Date.current == attendance.worked_on) && attendance.started_at != nil && attendance.finished_at == nil %>
+              <tr>
+                <td><%= commuter.number %></td>
+                <td><%= commuter.name %></td>
+              </tr>
+            <% end %>
+          <% end %>
+        <% end %>
+    </tbody>
+  <% end %>
+</table>

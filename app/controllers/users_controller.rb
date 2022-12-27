@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :edit, :update, :update_index, :destroy, :edit_basic_info, :update_basic_info, :show_check]
+  before_action :set_user, only: [:show, :edit, :update, :update_index, :destroy, :edit_basic_info, :update_basic_info, :show_check, :commuter]
   before_action :logged_in_user, only: [:edit, :update, :update_index, :destroy, :edit_basic_info, :update_basic_info]
   before_action :correct_user, only: [:show, :edit, :update,]
   before_action :admin_user, only: [:index, :destroy, :edit_basic_info, :update_basic_info, :all_user_edit]
@@ -122,6 +122,14 @@ class UsersController < ApplicationController
     @change = Attendance.where(indicater_reply_edit: "申請中", indicater_check_edit: @user.name).count
     @month = Attendance.where(indicater_reply_month: "申請中", indicater_check_month: @user.name).count
     @superiors = User.where(superior: true).where.not(id: @user.id )
+  end
+  
+  def commuter
+    Attendance.where.not(started_at: nil).each do |attendance|
+      if (Date.current == attendance.worked_on) && attendance.started_at.present? && attendance.finished_at.blank? 
+        @commuters = User.all.includes(:attendances)
+      end  
+    end
   end
 
   private
