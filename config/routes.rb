@@ -28,6 +28,8 @@ Rails.application.routes.draw do
     end
     collection { post :import }
     
+  resources :bases, only: [:edit, :new, :destroy, :index]
+  
   resources :attendances, only: [:update] do
       member do
         # 残業申請モーダル
