@@ -1,2 +1,32 @@
-<h1> 拠点情報の一覧</h1>
-<p>Find me in app/views/bases/index.html.erb</p>
+<h1> 拠点一覧</h1>
+<table class="table table-bordered">
+  <tr>
+    <th></th>
+    <th></th>
+    <th>拠点番号</th>
+    <th>拠点名</th>
+    <th>拠点種類</th>
+  </tr>
+  <% @bases.each do |base| %>  
+    <tr>
+      <td><%= link_to "修正", edit_basis_path(base), class: "btn btn-primary" %></td>
+      <td><%= link_to "削除", "#", class: "btn btn-primary" %></td>
+      <td><%= base.base_num %></td>
+      <td><%= base.base_name %></td>
+      <td><%= base.kinds %></td>
+    </tr>
+  <% end %>  
+</table>
+
+
+
+<button class="btn btn-primary"
+    data-toggle="collapse"
+    data-target="#example-1"
+    aria-expand="false"
+    aria-controls="example-1">拠点情報追加</button>
+<div class="collapse" id="example-1">
+  <div class="card card-body">
+    <%= render 'bases/form' %>
+  </div>
+</div>

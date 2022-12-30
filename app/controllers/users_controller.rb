@@ -17,7 +17,7 @@ class UsersController < ApplicationController
   #   else
   #     User.all
   #   end
-  # end
+  # endKK
   
   # def search
   #   @users = User.search(params[:name])
@@ -125,11 +125,7 @@ class UsersController < ApplicationController
   end
   
   def commuter
-    Attendance.where.not(started_at: nil).each do |attendance|
-      if (Date.current == attendance.worked_on) && attendance.started_at.present? && attendance.finished_at.blank? 
-        @commuters = User.all.includes(:attendances)
-      end  
-    end
+    @commuters = User.all
   end
 
   private

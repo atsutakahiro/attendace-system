@@ -9,6 +9,8 @@ Rails.application.routes.draw do
   post   '/login', to: 'sessions#create'
   delete '/logout', to: 'sessions#destroy'
 
+  resources :bases, only: [:edit, :create, :destroy, :index] 
+  
   resources :users do
     member do
       get 'all_user_edit' 
@@ -28,7 +30,7 @@ Rails.application.routes.draw do
     end
     collection { post :import }
     
-  resources :bases, only: [:edit, :new, :destroy, :index]
+  
   
   resources :attendances, only: [:update] do
       member do
