@@ -1,5 +1,5 @@
 class BasesController < ApplicationController
-  before_action :set_base, only: [:destroy]
+  before_action :set_base, only: [:destroy, :edit, :update]
   
   def index
     @bases = Base.all
@@ -25,6 +25,17 @@ class BasesController < ApplicationController
     flash[:success] = "拠点情報を削除しました。"
     redirect_to bases_url
   end
+  
+  def update
+    if @base.update_attributes(base_params)
+      flash[:success] = "拠点情報を更新しました。"
+      redirect_to bases_url
+    else
+      render :edit
+    end
+  end
+  
+  
 
 
   private

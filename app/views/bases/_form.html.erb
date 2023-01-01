@@ -1,6 +1,6 @@
 <h1>拠点情報の追加</h1>
 <%= form_with(model: @base, local: true) do |f| %>
-  <%= render 'shared/error_messages', object: @base %>
+  <%= render 'shared/form_error', object: @base %>
   
   <%= f.label "拠点番号" %>
   <%= f.text_field :base_num, class: "form-control" %>

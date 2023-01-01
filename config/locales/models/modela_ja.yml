@@ -19,9 +19,15 @@ ja:
           uid: カードID
           designated_work_end_time: 指定勤務終了時間
           designated_work_start_time: 指定勤務開始時間
+          employee_number: 社員番号
         attendance:
           worked_on: 日付
           started_at: 出勤時間
           finished_at: 退勤時間　
           note: 備考
+        base:
+          base_num: 拠点番号
+          base_name: 拠点名
+          kinds: 拠点種類
          
+        

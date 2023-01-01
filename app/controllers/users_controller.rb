@@ -108,6 +108,20 @@ class UsersController < ApplicationController
     redirect_to users_url
   end
   
+  def import
+    if params[:file].blank?
+      flash[:danger] = "CSVファイルが選択されていません。"
+    redirect_to users_url
+    else
+      if User.import(params[:file])
+        flash[:success] = "CSVファイルのインポートに成功しました。"
+      else
+        flash[:danger] = "CSVファイルのインポートに失敗しました。"
+      end
+      redirect_to users_url
+    end
+  end
+  
   def show_check
     @worked_sum = @attendances.where.not(started_at: nil).count
     @overtime_count = Attendance.where(indicater_check: @user.name, indicater_reply: "申請中").count
@@ -129,40 +143,41 @@ class UsersController < ApplicationController
     end
 
     def basic_info_params
-      params.require(:user).permit(:affiliation, :basic_time, :work_time)
+      params.require(:user).permit(:name, :email, :affiliation,:employee_number,:uid, :password, 
+        :password_confirmation, :basic_work_time, :designated_work_start_time, :designated_work_end_time)
     end
 
 
     def send_attendances_csv(attendances)
-          #文字化け防止
-          bom = "\uFEFF"
-          # CSV.generateとは、対象データを自動的にCSV形式に変換してくれるCSVライブラリの一種
-          csv_data = CSV.generate do |csv|
-            # %w()は、空白で区切って配列を返します
-            header = %w(日付 出勤時間 退勤時間)
-            # csv << column_namesは表の列に入る名前を定義します。
-            csv << header
-            # column_valuesに代入するカラム値を定義します。
-            attendances.each do |day|
-              column_values = [
-                day.worked_on.strftime("%Y年%m月%d日(#{$days_of_the_week[day.worked_on.wday]})"),
-                if day.started_edit_at.present? && (day.indicater_select == "承認").present?
-                  l(day.started_edit_at, format: :time)
-                else
-                  nil
-                end,
-                if day.finished_edit_at.present? && (day.indicater_select == "承認").present?
-                  l(day.finished_edit_at, format: :time)
-                else
-                  nil
-                end
-              ]
-            # csv << column_valueshは表の行に入る値を定義します。
-              csv << column_values
+      #文字化け防止
+      bom = "\uFEFF"
+      # CSV.generateとは、対象データを自動的にCSV形式に変換してくれるCSVライブラリの一種
+      csv_data = CSV.generate do |csv|
+        # %w()は、空白で区切って配列を返します
+        header = %w(日付 出勤時間 退勤時間)
+        # csv << column_namesは表の列に入る名前を定義します。
+        csv << header
+        # column_valuesに代入するカラム値を定義します。
+        attendances.each do |day|
+          column_values = [
+            day.worked_on.strftime("%Y年%m月%d日(#{$days_of_the_week[day.worked_on.wday]})"),
+            if day.started_edit_at.present? && (day.indicater_select == "承認").present?
+              l(day.started_edit_at, format: :time)
+            else
+              nil
+            end,
+            if day.finished_edit_at.present? && (day.indicater_select == "承認").present?
+              l(day.finished_edit_at, format: :time)
+            else
+              nil
             end
-          end
-          # csv出力のファイル名を定義します。
-          send_data(csv_data, filename: "勤怠一覧.csv")
+          ]
+        # csv << column_valueshは表の行に入る値を定義します。
+          csv << column_values
+        end
+      end
+      # csv出力のファイル名を定義します。
+      send_data(csv_data, filename: "勤怠一覧.csv")
     end
     
         # def send_attendances_csv(attendances)

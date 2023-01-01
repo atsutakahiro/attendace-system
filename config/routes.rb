@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   post   '/login', to: 'sessions#create'
   delete '/logout', to: 'sessions#destroy'
 
-  resources :bases, only: [:edit, :create, :destroy, :index] 
+  resources :bases, only: [:edit, :create, :destroy, :index, :update] 
   
   resources :users do
     member do
@@ -29,10 +29,7 @@ Rails.application.routes.draw do
       get 'commuter'
     end
     collection { post :import }
-    
-  
-  
-  resources :attendances, only: [:update] do
+    resources :attendances, only: [:update] do
       member do
         # 残業申請モーダル
         get 'edit_overtime_request'
@@ -50,6 +47,6 @@ Rails.application.routes.draw do
         get 'edit_month_approval'
         patch 'update_month_approval'
       end
-  end
+    end
   end
 end
