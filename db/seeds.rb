@@ -1,10 +1,12 @@
 # coding: utf-8
 
 User.create!(name: "Sample User",
-             email: "sample@email.com",   
+             email: "sample@email.com",    
+             affiliation: "管理部門",
+             employee_number: 1,
+             uid: 1,
              password: "password",
              password_confirmation: "password",
-             affiliation: "管理部門",
              admin: true)
 
 User.create!(name: "上長A",

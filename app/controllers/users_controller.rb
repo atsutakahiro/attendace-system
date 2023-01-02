@@ -22,6 +22,15 @@ class UsersController < ApplicationController
   # def search
   #   @users = User.search(params[:name])
   # end
+ def import
+   if params[:file].blank?
+     flash[:danger]= "csvファイルを選択してください"
+   else 
+     User.import(params[:file]) 
+     flash[:success] = "csvファイルをインポートしました。"    
+   end
+   redirect_to users_url
+  end
   
    
   def show
@@ -69,7 +78,6 @@ class UsersController < ApplicationController
   end
 
   def edit
-    
   end
 
   def update
@@ -108,19 +116,7 @@ class UsersController < ApplicationController
     redirect_to users_url
   end
   
-  def import
-    if params[:file].blank?
-      flash[:danger] = "CSVファイルが選択されていません。"
-    redirect_to users_url
-    else
-      if User.import(params[:file])
-        flash[:success] = "CSVファイルのインポートに成功しました。"
-      else
-        flash[:danger] = "CSVファイルのインポートに失敗しました。"
-      end
-      redirect_to users_url
-    end
-  end
+  
   
   def show_check
     @worked_sum = @attendances.where.not(started_at: nil).count
@@ -180,23 +176,23 @@ class UsersController < ApplicationController
       send_data(csv_data, filename: "勤怠一覧.csv")
     end
     
-        # def send_attendances_csv(attendances)
-        #   csv_data = CSV.generate do |csv|
-        #     header = %w(日付 出社 退社)
-        #     csv << header
-        #     attendances.each do |attendance|
-        #       values = [
-        #         l(attendance.worked_on, format: :short),
-        #         if attendance.started_at.present?
-        #         l(attendance.started_at, format: :time) end ,
-        #         if attendance.finished_at.present?
-        #         l(attendance.finished_at, format: :time)  end,
-        #         ]
-        #         csv << values
-        #       end
-        #     end
-        #     send_data(csv_data, filename: "勤怠一覧表.csv")
-        # end
+        def send_attendances_csv(attendances)
+          csv_data = CSV.generate do |csv|
+            header = %w(日付 出社 退社)
+            csv << header
+            attendances.each do |attendance|
+              values = [
+                l(attendance.worked_on, format: :short),
+                if attendance.started_at.present?
+                l(attendance.started_at, format: :time) end ,
+                if attendance.finished_at.present?
+                l(attendance.finished_at, format: :time)  end,
+                ]
+                csv << values
+              end
+            end
+            send_data(csv_data, filename: "勤怠一覧表.csv")
+        end
     
         # 取得できるものは以下と同じ @user = User.find(params[:id])
         # @user = User.find(params[:attendance][:user_id])
