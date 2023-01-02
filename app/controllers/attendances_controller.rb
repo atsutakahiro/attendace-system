@@ -118,7 +118,7 @@ class AttendancesController < ApplicationController
   
   # 上長による１ヶ月分の勤怠提出の決済
   def edit_month_approval
-    @attendances = Attendance.where(one_month_request_superior: @user.name).order(:worked_on).group_by(&:user_id)
+    @attendances = Attendance.where(one_month_request_superior: @user.name, one_month_approval_status: "申請中").order(:worked_on).group_by(&:user_id)
   end
   
   def update_month_approval
@@ -223,6 +223,6 @@ class AttendancesController < ApplicationController
     end
     
     def month_approval_params
-      params.require(:user).permit(attendances: [:one_month_approval_check])[:attendances]
+      params.require(:user).permit(attendances: [:one_month_approval_check, :one_month_approval_status])[:attendances]
     end
 end
