@@ -12,8 +12,8 @@
         <td><%= l(@first_day, format: :middle) %>時間管理表</td>
       <% end %>
       <td>
-        指定勤務開始時間<%= format_basic_info(@user.designated_work_start_time) %><br>
-        指定勤務終了時間<%= format_basic_info(@user.designated_work_end_time) %>
+        指定勤務開始時間 <%= l(@user.designated_work_start_time, format: :time) %><br>
+        指定勤務終了時間 <%= l(@user.designated_work_end_time, format: :time) %>
       </td>
       <td colspan="3">基本時間：<%= format_basic_info(@user.basic_time) %></td>
       <td>初日：<%= l(@first_day, format: :short) %></td>
@@ -52,7 +52,7 @@
 <div class="btn-users-show">
   <% if current_user == @user %>
     <%= link_to "勤怠を編集", attendances_edit_one_month_user_path(date: @first_day), class: "btn btn-primary" %>
-    <%= link_to "CSV出力", user_path(format: :csv), class: "btn btn-primary" %><br>
+    <%= link_to "CSV出力", user_path(format: :csv,date: @first_day ), class: "btn btn-primary" %><br>
     <%= link_to "勤怠修正ログ（承認済）", attendances_edit_log_user_path(date: @first_day), class: "btn btn-primary" %>
   <% end %>
 </div>	
@@ -130,7 +130,7 @@
           <td><%= day.note %></td>
           <td><%= l(day.overtime_finished_at, format: :hour) if day.overtime_finished_at.present? %></td>
           <td><%= l(day.overtime_finished_at.floor_to(15.minutes), format: :minutes) if day.overtime_finished_at.present? %></td>
-          <td><%= overtime_calculation(day.overtime_finished_at, @user.designated_work_end_time, day.tomorrow) if day.overtime_finished_at.present? %></td>
+          <td><%= overtime_calculation(day.overtime_finished_at.floor_to(15.minutes), @user.designated_work_end_time, day.tomorrow) if day.overtime_finished_at.present? %></td>
           <td><%= day.business_process_content if day.business_process_content.present? %></td>
           <td class="result">
             <% if day.indicater_reply == "申請中" %>
