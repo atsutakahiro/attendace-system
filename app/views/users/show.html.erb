@@ -11,7 +11,7 @@
       <% else %>
         <td><%= l(@first_day, format: :middle) %>時間管理表</td>
       <% end %>
-      <td>
+      <td> 
         指定勤務開始時間 <%= l(@user.designated_work_start_time, format: :time) %><br>
         指定勤務終了時間 <%= l(@user.designated_work_end_time, format: :time) %>
       </td>
