@@ -19,7 +19,7 @@ class Attendance < ApplicationRecord
       errors.add(:finished_at, "が必要です") 
     end 
   end
-
+ 
   def started_edit_at_than_finished_edit_at_fast_if_invalid
     if started_edit_at.present? && finished_edit_at.present?
       errors.add(:started_at, "より早い退勤時間は無効です") if started_edit_at > finished_edit_at
