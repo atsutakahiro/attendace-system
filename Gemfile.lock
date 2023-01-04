@@ -93,7 +93,9 @@ GEM
     nokogiri (1.13.8)
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
-    pg (0.20.0)
+    nokogiri (1.13.8-x86_64-linux)
+      racc (~> 1.4)
+    pg (1.4.5)
     pry (0.14.1)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -164,6 +166,7 @@ GEM
       sprockets (>= 3.0.0)
     sqlite3 (1.5.2)
       mini_portile2 (~> 2.8.0)
+    sqlite3 (1.5.2-x86_64-linux)
     thor (1.2.1)
     thread_safe (0.3.6)
     tilt (2.0.11)
@@ -186,6 +189,7 @@ GEM
 
 PLATFORMS
   ruby
+  x86_64-linux
 
 DEPENDENCIES
   bcrypt
@@ -197,7 +201,7 @@ DEPENDENCIES
   jbuilder (~> 2.5)
   jquery-rails
   listen (>= 3.0.5, < 3.2)
-  pg (= 0.20.0)
+  pg (~> 1.4)
   pry-byebug
   puma (~> 3.7)
   rails (~> 5.1.6)

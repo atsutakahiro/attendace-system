@@ -4,6 +4,8 @@ ruby '2.7.6'
 
 
 gem 'rails',        '~> 5.1.6'
+ # Use sqlite3 as the database for Active Record
+ # gem 'sqlite3', '~> 1.4'
 gem 'bcrypt'
 gem 'faker'
 gem 'bootstrap-sass'
@@ -33,7 +35,7 @@ group :development do
 end
 
 group :production do
-  gem 'pg', '0.20.0'
+  gem "pg", "~> 1.4"
 end
 # Windows環境ではtzinfo-dataというgemを含める必要があります
 # Ma
