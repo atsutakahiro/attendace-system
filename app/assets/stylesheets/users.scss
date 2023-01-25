@@ -1,0 +1,115 @@
+/* ユーザー情報テーブル */
+
+.user-table {
+    vertical-align: middle;
+    text-align: center;
+  }
+  
+  .upp {
+      padding-bottom: 20px;
+  }
+  
+  /* ユーザー情報下ボタン */
+  
+  .btn-users-show {
+    margin-top: -10px;
+    margin-bottom: 10px;
+  }
+  
+  /* ユーザー勤怠情報テーブル */
+  
+  #table-attendances {
+    th {
+      vertical-align: middle;
+      text-align: center;
+    }
+    td {
+      vertical-align: middle;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table-layout: fixed;
+    width: 100%;
+  }
+  // 残業申請ボタンの大きさ
+  .button {
+    width: 80px;
+  }
+  
+  .box{
+    width: 2px;
+  }
+  
+  .notice-color {
+    text-decoration: none;
+    color: red;
+    padding-bottom: 20px;
+  }
+  
+  /* 入力フォーム */
+  
+  .label-signup {
+    margin-top: 5px;
+  }
+  
+  .btn-signup {
+    margin-top: 10px;
+  }
+  
+  .label-user--edit {
+    margin-top: 5px;
+  }
+  
+  .btn-user--edit {
+    margin-top: 10px;
+  }
+  
+  /* ユーザー一覧ページ */
+  
+  #table-users {
+    td {
+      vertical-align: middle;
+    }  
+  }
+  
+  .result {
+    font-size: 12px;
+  }
+  
+  /* 基本情報編集モーダルウインドウ */
+  
+  .label-basic-info {
+    margin-top: 5px;
+  }
+  
+  .btn-basic-info {
+    margin: 15px 0;
+    width: 100%;
+  }
+  
+  .wday0 {
+    color: red;
+  }
+  
+  .wday6 {
+    color: blue;
+  }
+  
+  // 勤怠変更承認モーダルウィンドウ
+  #month{
+   th {
+      vertical-align: middle;
+      text-align: center;
+    }
+    td {
+      vertical-align: middle;
+      text-align: center;
+      border-collapse: collapse;
+    } 
+  }
+  
+  .form {
+    width: 20px;
+  }
+  
+  

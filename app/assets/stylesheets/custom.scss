@@ -1,7 +1,11 @@
 @import "bootstrap-sprockets";
 @import "bootstrap";
 
-/* 共通 */
+.bootstrap-date-only-width {
+  display: inline-block;
+  width: auto;
+}
+/* universal */
 
 body {
   padding-top: 60px;
@@ -23,7 +27,7 @@ textarea {
   margin-bottom: 10px;
 }
 
-/* タイポグラフィ */
+/* typography */
 
 h1, h2, h3, h4, h5, h6 {
   line-height: 1;
@@ -50,7 +54,7 @@ p {
   line-height: 1.7em;
 }
 
-/* ヘッダー */
+/* header */
 
 #logo {
   float: left;
@@ -68,7 +72,7 @@ p {
   text-decoration: none;
 }
 
-/* デバッグウインドウ */
+/* debug */
 
 .debug_dump {
   clear: both;
@@ -80,7 +84,7 @@ p {
   box-sizing:         border-box;
 }
 
-/* エラーメッセージ */
+/* error_messages */
 
 #error_explanation {
   color: red;
@@ -96,3 +100,65 @@ p {
     color: $state-danger-text;
   }
 }
+
+/* モーダルウインドウの位置調整 */
+
+.modal-dialog-center {
+  padding-top: 10%;
+}
+
+label-overwork {
+  margin-top: 5px;
+}
+
+.btn-overwork {
+  margin: 15px 0;
+  width: 30%;
+}
+
+/* 基本情報編集モーダルウインドウ */
+
+.label-basic-info {
+  margin-top: 5px;
+}
+
+.btn-basic-info {
+  margin: 15px 0;
+  width: 30%;
+}
+
+
+/* 残業申請モーダルウインドウ */
+.overtime_request {
+  th {
+text-align: center;
+  } 
+  td {
+    text-align: center;
+  }
+}
+
+.line tr:nth-child(odd) td{
+  background: #f8f8f8;
+  text-align: center;
+}
+
+.maru {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+}
+.size_small{
+  width: 18px;
+  height: 18px;
+}
+.letter3 {
+  font-size: 0.7em;
+  line-height: 1.5em;
+}
+.black {
+  color: black;
+  border: 1px solid black;
+}
+
