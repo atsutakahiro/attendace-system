@@ -7,7 +7,7 @@ class UsersController < ApplicationController
   before_action :set_one_month, only: [:show, :show_check]
 
   def index
-    @users = User.paginate(page: params[:page])
+    @users = User.paginate(page: params[:page], per_page: 5).order("id ASC")
     @users = @users.where('name LIKE ?', "%#{params[:search]}%") if params[:search].present?
   end
   

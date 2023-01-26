@@ -1,6 +1,6 @@
-# fly.toml file generated for billowing-cherry-966 on 2023-01-20T09:12:27+09:00
+# fly.toml file generated for dawn-mountain-8279 on 2023-01-26T00:13:58+09:00
 
-app = "billowing-cherry-966"
+app = "dawn-mountain-8279"
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = []

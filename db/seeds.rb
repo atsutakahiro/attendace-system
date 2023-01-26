@@ -16,7 +16,8 @@ User.create!(name: "上長A",
    affiliation: "役員",
    employee_number: 1,
    uid: 1,
-   superior: true)
+   superior: true,
+   admin: false)
 
 User.create!(name: "上長B",
    email: "sampleB@email.com",
@@ -25,14 +26,15 @@ User.create!(name: "上長B",
    affiliation: " 役員",
    employee_number: 2,
    uid: 2,
-   superior: true)
+   superior: true,
+   admin: false)
 
-10.times do |n|
-name  = Faker::Name.name
-email = "sample-#{n+1}@email.com"
-password = "password"
-User.create!(name: name,
-      email: email,     
-      password: password,
-      password_confirmation: password)
-end
+User.create!(name: "山田太郎",
+   email: "sample-1@email.com",
+   password: "password",
+   password_confirmation: "password",
+   affiliation: " 役員",
+   employee_number: 3,
+   uid: 3,
+   superior: false,
+   admin: false)
