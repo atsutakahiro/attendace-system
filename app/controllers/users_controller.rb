@@ -159,12 +159,12 @@ class UsersController < ApplicationController
         attendances.each do |day|
           column_values = [
              l(day.worked_on, format: :short), 
-            if day.started_edit_at.present? && day.indicater_select == "承認"
-              l(day.started_edit_at.floor_to(15.minutes), format: :time) 
+             if day.indicater_select == "承認"
+              l(day.started_edit_at.floor_to(15.minutes), format: :time) if day.started_edit_at.present?
             else
               l(day.started_at.floor_to(15.minutes), format: :time) if day.started_at.present?
             end,
-            if day.finished_edit_at.present? && day.indicater_select == "承認"
+            if day.indicater_select == "承認" && day.finished_edit_at.present?
               l(day.finished_edit_at.floor_to(15.minutes), format: :time) 
             else
               l(day.finished_at.floor_to(15.minutes), format: :time) if day.finished_at.present?

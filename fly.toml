@@ -1,6 +1,6 @@
-# fly.toml file generated for dawn-mountain-8279 on 2023-01-26T00:13:58+09:00
+# fly.toml file generated for bold-meadow-5830 on 2023-01-26T20:51:38+09:00
 
-app = "dawn-mountain-8279"
+app = "bold-meadow-5830"
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = []

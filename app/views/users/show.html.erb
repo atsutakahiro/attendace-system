@@ -115,12 +115,7 @@
           <% else %>
             <td></td>
           <% end %>  
-          <% if day.indicater_reply == "承認" && day.finished_edit_at.present? %>
-            <% day.finished_edit_at = day.overtime_finished_at%>
-          <% end %>
-          <% if day.indicater_reply == "承認" && day.finished_at.present? %>
-            <% day.finished_at = day.overtime_finished_at%>
-          <% end %>  
+          
           <% if day.indicater_select == "承認" %>
             <td class="col-sm-2"><%= l(day.finished_edit_at.floor_to(15.minutes), format: :hour) if day.finished_edit_at.present? %></td>
             <td class="col-sm-2"><%= l(day.finished_edit_at.floor_to(15.minutes), format: :minutes) if day.finished_edit_at.present? %></td>

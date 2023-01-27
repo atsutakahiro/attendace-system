@@ -89,6 +89,11 @@ class AttendancesController < ApplicationController
           attendance.tomorrow = nil
           attendance.business_process_content = nil
           attendance.indicater_check = nil
+        else
+          if item[:indicater_reply] == "承認"
+            attendance.finished_at = attendance.overtime_finished_at if attendance.finished_at.present? 
+            attendance.finished_edit_at = attendance.overtime_finished_at if attendance.finished_edit_at.present? 
+          end
         end
         attendance.update(item)
         flash[:success] = "勤怠の変更申請を送信しました。"
@@ -203,7 +208,7 @@ class AttendancesController < ApplicationController
     
      # 残業申請モーダルの情報
     def overtime_request_params
-      params.require(:attendance).permit([:overtime_finished_at, :tomorrow, :business_process_content, :indicater_check, :indicater_reply])
+      params.require(:attendance).permit([:overtime_finished_at, :finished_at, :finished_edit_at, :tomorrow, :business_process_content, :indicater_check, :indicater_reply])
     end
     
      # 残業申請承認
